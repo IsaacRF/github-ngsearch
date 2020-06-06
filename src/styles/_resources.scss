@@ -1,0 +1,39 @@
+
+// --- App theming --- //
+
+/**
+ * $theme: the name of the theme that will be defined.
+ * $colors: a map of the theme colors, following this structure:
+ *      (
+ *          primary: #000,
+ *          secondary: #000,
+ *          tertiary: #000,
+ *          back: #000,
+ *          fontPrimary: #000,
+ *          fontSecondary: #000
+ *      )
+ * $container (optional): the general wrapper that will be themed.
+ */
+@mixin theme($theme, $colors, $container: '.page-wrapper') {
+
+    #{$container}.#{$theme}-theme {
+        .toolbar {
+            background-color: map-get($colors, primary);
+            color: map-get($colors, fontPrimary);
+
+            #search-bar {
+                background-color: map-get($colors, tertiary);
+                color: map-get($colors, fontPrimary);
+            }
+        }
+
+        @content($colors);
+    }
+}
+
+
+// --- Utils --- //
+
+@mixin margin-s {
+    margin: 0 16px;
+}

@@ -1,0 +1,23 @@
+
+@include theme('light', $colors: (
+    primary: #24292E,
+    secondary: #E1E4E8,
+    tertiary: #3F4448,
+    back: #000000,
+    fontPrimary: #FFFFFF,
+    fontSecondary: #24292E
+));
+
+@include theme('bubbly', $colors: (
+    primary: #944397,
+    secondary: #d19cd6,
+    tertiary: #7a6479,
+    back: #53005a,
+    fontPrimary: #ff1fda,
+    fontSecondary: #3d0033
+)) using ($colors) {
+    * {
+        border: 4px solid map-get($colors, fontPrimary);
+        border-radius: 50%;
+    }
+}
