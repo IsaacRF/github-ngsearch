@@ -17,9 +17,16 @@
 @mixin theme($theme, $colors, $container: '.page-wrapper') {
 
     #{$container}.#{$theme}-theme {
+        background-color: map-get($colors, back);
+
         .toolbar {
             background-color: map-get($colors, primary);
             color: map-get($colors, fontPrimary);
+
+            .expandable-menu .dropdown {
+                background-color: lighten(map-get($colors, primary), 5%);
+                color: map-get($colors, fontPrimary);
+            }
 
             #search-bar {
                 background-color: map-get($colors, tertiary);
@@ -27,13 +34,12 @@
             }
         }
 
+        svg#clouds {
+            path {
+                fill: map-get($colors, secondary);
+            }
+        }
+
         @content($colors);
     }
-}
-
-
-// --- Utils --- //
-
-@mixin margin-s {
-    margin: 0 16px;
 }
