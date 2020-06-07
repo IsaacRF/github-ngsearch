@@ -2,9 +2,9 @@
 
 <div class="spinner-loader"></div>
 
-<div *ngIf="users" class="card-container">
+<div id="users-list" class="card-container">
     <div *ngFor="let user of users" class="card-wrapper">
-        <a class="card" href="/user/{{user.login}}" title="{{user.login}}">
+        <a class="card" href="/user-detail/{{user.login}}" title="{{user.login}}">
             <img src="{{user.avatarUrl}}" alt="{{user.login}} Profile Picture">
 
             <span>{{user.login}}</span>

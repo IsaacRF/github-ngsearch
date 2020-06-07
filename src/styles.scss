@@ -96,6 +96,7 @@ button {
 }
 
 .spinner-loader {
+    display: none;
     @keyframes spinner { to { transform: rotate(360deg); } }
     width: 120px;
     height: 120px;

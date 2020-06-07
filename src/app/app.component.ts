@@ -60,7 +60,6 @@ export class AppComponent implements OnInit {
 
         clearTimeout(this.searchTimer);
         this.searchTimer = setTimeout(() => {
-            console.log(_this.searchTerm);
             this.router.navigateByUrl('user-search/' + _this.searchTerm);
         }, 500)
     }

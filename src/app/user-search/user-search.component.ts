@@ -2,6 +2,7 @@ import { User } from './../model/User';
 import { GithubApiService } from './../services/github-api.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-user-search',
@@ -19,10 +20,21 @@ export class UserSearchComponent implements OnInit {
         let _this = this;
 
         this.route.params.subscribe(routeParams => {
-            this.githubApiService.searchUsers(routeParams.searchTerm)
-                .subscribe(users => {
-                    _this.users = users;
+            let searchTerm = routeParams.searchTerm;
+            if (searchTerm) {
+                $('#users-list').fadeOut(400, () => {
+                    $('.spinner-loader').fadeIn();
+                    this.users = null;
+
+                    this.githubApiService.searchUsers(searchTerm)
+                        .subscribe(users => {
+                            $('.spinner-loader').fadeOut(400, () => {
+                                _this.users = users;
+                                $('#users-list').fadeIn();
+                            });
+                        });
                 });
+            }
         });
     }
 }
