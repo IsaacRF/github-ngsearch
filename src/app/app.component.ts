@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
     theme = 'light-theme';
     isMobile = false;
 
-    searchTerm = '';
+    searchTerm: string = '';
     searchTimer;
 
     constructor(private router: Router) {}

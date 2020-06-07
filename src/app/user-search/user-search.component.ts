@@ -11,6 +11,7 @@ import * as $ from 'jquery';
 })
 export class UserSearchComponent implements OnInit {
     users: User[];
+    searchTerm: string;
 
     constructor(
         private githubApiService: GithubApiService,
@@ -20,19 +21,28 @@ export class UserSearchComponent implements OnInit {
         let _this = this;
 
         this.route.params.subscribe(routeParams => {
-            let searchTerm = routeParams.searchTerm;
-            if (searchTerm) {
-                $('#users-list').fadeOut(400, () => {
+            this.searchTerm = routeParams.searchTerm;
+            if (this.searchTerm) {
+                $('.no-search').fadeOut();
+
+                $('.card-container').fadeOut(400, () => {
                     $('.spinner-loader').fadeIn();
                     this.users = null;
 
-                    this.githubApiService.searchUsers(searchTerm)
+                    this.githubApiService.searchUsers(this.searchTerm)
                         .subscribe(users => {
                             $('.spinner-loader').fadeOut(400, () => {
-                                _this.users = users;
-                                $('#users-list').fadeIn();
+                                if (_this.searchTerm) {
+                                    _this.users = users;
+                                    $('.card-container').fadeIn();
+                                }
                             });
                         });
+                });
+            } else {
+                $('.card-container').fadeOut(400, () => {
+                    _this.users = null;
+                    $('.no-search').fadeIn();
                 });
             }
         });

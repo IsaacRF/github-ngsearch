@@ -11,6 +11,35 @@ h3 {
     margin: 20vh auto;
 }
 
+.no-search {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin: -5px;
+    width: 100%;
+    flex: 0 1 25%;
+
+    svg {
+        width: 350px;
+        height: 350px;
+
+        @media screen and (max-width: 540px) {
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+    h2 {
+        text-align: center;
+
+        @media screen and (max-width: 540px) {
+            font-size: 16px;
+        }
+    }
+}
+
 .card-container {
     display: flex;
     flex-direction: row;

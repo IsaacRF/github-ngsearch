@@ -73,6 +73,12 @@
             background-color: map-get($colors, secondary);
         }
 
+        .no-search {
+            svg {
+                fill: darken(map-get($colors, secondary), 10%);
+            }
+        }
+
         @content($colors);
     }
 
