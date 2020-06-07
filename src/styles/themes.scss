@@ -1,20 +1,36 @@
 
+@import 'resources';
+
 @include theme('light', $colors: (
     primary: #24292E,
-    secondary: #E1E4E8,
+    secondary: #F6F8FA,
     tertiary: #3F4448,
     back: #FFFFFF,
     fontPrimary: #FFFFFF,
     fontSecondary: #24292E
-));
+)) using ($colors) {
+    footer {
+        &, & a {
+            color: darken(map-get($colors, fontPrimary), 50%);
+        }
+
+        .bottom {
+            svg {
+                path {
+                    fill:  darken(map-get($colors, fontPrimary), 50%);
+                }
+            }
+        }
+    }
+};
 
 @include theme('dark', $colors: (
     primary: #24292E,
-    secondary: #4c4c4d,
+    secondary: #3a3a3b,
     tertiary: #3F4448,
     back: #111,
     fontPrimary: #FFFFFF,
-    fontSecondary: #24292E
+    fontSecondary: #FFFFFF
 ));
 
 @include theme('bubbly', $colors: (
@@ -23,9 +39,9 @@
     tertiary: #535353,
     back: #53005a,
     fontPrimary: #ffffff,
-    fontSecondary: #3d0033
+    fontSecondary: #ffd9f9
 )) using ($colors) {
     * {
-        border-radius: 20px;
+        border-radius: 20px !important;
     }
 }

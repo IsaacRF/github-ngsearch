@@ -1,1 +1,15 @@
-<p>user-search works!</p>
+<h1>GitHub Users</h1>
+
+<div class="spinner-loader"></div>
+
+<div *ngIf="users" class="card-container">
+    <div *ngFor="let user of users" class="card-wrapper">
+        <a class="card" href="/user/{{user.login}}" title="{{user.login}}">
+            <img src="{{user.avatarUrl}}" alt="{{user.login}} Profile Picture">
+
+            <span>{{user.login}}</span>
+
+            <!-- <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg> -->
+        </a>
+    </div>
+</div>

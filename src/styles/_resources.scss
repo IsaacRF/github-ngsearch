@@ -19,6 +19,15 @@
     #{$container}.#{$theme}-theme {
         background-color: map-get($colors, back);
 
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: map-get($colors, fontSecondary);
+        }
+
         .toolbar {
             background-color: map-get($colors, primary);
             color: map-get($colors, fontPrimary);
@@ -36,10 +45,35 @@
 
         svg#clouds {
             path {
-                fill: map-get($colors, secondary);
+                fill: darken(map-get($colors, secondary), 10%);
             }
+        }
+
+        footer {
+            &, & a {
+                color: map-get($colors, fontPrimary);
+            }
+
+            .bottom {
+                svg {
+                    path {
+                        fill:  map-get($colors, fontPrimary);
+                    }
+                }
+            }
+        }
+
+        .card {
+            background-color: map-get($colors, secondary);
+            border: 1px solid darken(map-get($colors, secondary), 10%);
+            color: lighten(map-get($colors, fontSecondary), 25%);
+        }
+
+        .shaded-bg {
+            background-color: map-get($colors, secondary);
         }
 
         @content($colors);
     }
+
 }

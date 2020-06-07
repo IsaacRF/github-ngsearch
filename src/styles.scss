@@ -1,7 +1,106 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import 'styles/themes';
+
 html,
 body {
     margin: 0;
     padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+a,
+a:visited,
+a:hover {
+    color: #1976d2;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #125699;
+}
+
+p {
+    margin: 0;
+}
+
+button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font-size: inherit;
+    color: inherit;
+
+    &:focus {
+        outline: 0;
+    }
+}
+
+.card {
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+    line-height: 24px;
+    text-decoration: none;
+    font-weight: 700;
+
+    img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        margin-right: 20px;
+    }
+
+    span {
+        flex: 0 1 40%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &.highlight-card {
+        background-color: #1976d2;
+        color: white;
+        font-weight: 600;
+        border: none;
+        width: auto;
+        min-width: 30%;
+        position: relative;
+
+        span {
+            margin-left: 60px;
+        }
+    }
+
+    &:not(.highlight-card) {
+        cursor: pointer;
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+        }
+    }
+}
+
+.spinner-loader {
+    @keyframes spinner { to { transform: rotate(360deg); } }
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 12px solid rgba(#EEE, 0.4);
+    border-top-color: #0099ff;
+    animation: spinner .6s linear infinite;
 }

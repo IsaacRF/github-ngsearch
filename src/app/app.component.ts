@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as $ from 'jquery';
 
 @Component({
@@ -11,11 +12,17 @@ export class AppComponent implements OnInit {
     theme = 'light-theme';
     isMobile = false;
 
+    searchTerm = '';
+    searchTimer;
+
+    constructor(private router: Router) {}
+
     ngOnInit() {
         window.addEventListener('resize', this.checkIsMobile);
         this.checkIsMobile();
         let _this = this;
 
+        //Events to auto-control expandable menus without further html code
         document.querySelectorAll('.expandable-menu').forEach(element => {
             element.querySelector('button').addEventListener('click', ev => {
                 ev.stopPropagation();
@@ -45,6 +52,21 @@ export class AppComponent implements OnInit {
         });
     }
 
+    /**
+     * Navigate to search view
+     */
+    search() {
+        let _this = this;
+
+        clearTimeout(this.searchTimer);
+        this.searchTimer = setTimeout(() => {
+            console.log(_this.searchTerm);
+            this.router.navigateByUrl('user-search/' + _this.searchTerm);
+        }, 500)
+    }
+
+
+    /* -- Theming Methods -- */
     switchTheme(event) {
         event.stopPropagation();
         if (event.target.matches('button')) {

@@ -1,15 +1,16 @@
 import { User } from './../model/User';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { catchError, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class GithubApiService {
-    private oAuthToken="bab492878a9cb241f70139aa3152dfecb263765b";
-    private apiUserEndpoint = "https://api.github.com/search/users/";
+    //NOTE: This token has no private permissions enabled, and is here only for increasing GitHub API call limits for testing purposes
+    private oAuthToken = "bab492878a9cb241f70139aa3152dfecb263765b";
+    private apiUserEndpoint = "https://api.github.com/search/users";
 
     /**
      * Base service constructor
@@ -25,12 +26,22 @@ export class GithubApiService {
      * @returns Observable list of users matching the search string
      */
     searchUsers(userName: string): Observable<User[]> {
-        let params = new HttpParams()
-            .set('q', userName);
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'Authorization': this.oAuthToken
+            }),
+            params: new HttpParams().set('q', userName)
+        };
 
-        return this.http.get<User[]>(this.apiUserEndpoint, {params})
+        return this.http.get(this.apiUserEndpoint, httpOptions)
             .pipe(
-                tap(users => console.log(`retrieved ${users.length} users by search term ${userName}`)),
+                tap((response: any) => console.log(`retrieved ${response.total_count} users by search term ${userName}`)),
+                map((response: any) => {
+                    return response.items.map(user => {
+                        return new User(user.login, user.avatar_url);
+                    });
+                }),
                 catchError(this.handleError('searchUsers', []))
             );
     }
