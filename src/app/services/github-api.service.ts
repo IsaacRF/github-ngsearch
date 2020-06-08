@@ -79,7 +79,6 @@ export class GithubApiService {
 
                     //Save cache
                     this.cache[userLogin] = response;
-                    response = response.body;
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
@@ -101,12 +100,33 @@ export class GithubApiService {
      * @param userLogin User login name
      */
     getUserRepos(userLogin: string): Observable<Repo[]> {
-        const httpOptions = { headers: this.httpHeaders };
+        let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
+
+        let cachedRepos = this.cache[`${userLogin}${this.cacheReposKey}`];
+        if (cachedRepos) {
+            //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
+            let etag = cachedRepos.headers.get('ETag');
+            httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
+        }
 
         return this.http.get<Repo[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/repos`, httpOptions)
             .pipe(
-                tap((response: any) => console.log(`retrieved ${response.length} repos from ${userLogin}`)),
-                catchError(this.handleError('getUserRepos', []))
+                tap((response: any) => {
+                    console.log(`[HTTP] retrieved ${response.body.length} repos from ${userLogin}`)
+
+                    //Save cache
+                    this.cache[`${userLogin}${this.cacheReposKey}`] = response;
+                }),
+                map((response: any) => response.body),
+                catchError(err => {
+                    //Error 304: Not Modified -> Get info from Cache
+                    if (err.status == 304) {
+                        console.log(`[CACHE] retrieved ${cachedRepos.body.length} repos from ${userLogin}`)
+                        return of(cachedRepos.body);
+                    } else {
+                        this.handleError('getUserRepos', []);
+                    }
+                })
             );
     }
 
@@ -117,12 +137,33 @@ export class GithubApiService {
      * @param userLogin User login name
      */
     getUserFollowers(userLogin: string): Observable<User[]> {
-        const httpOptions = { headers: this.httpHeaders };
+        let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
+
+        let cachedFollowers = this.cache[`${userLogin}${this.cacheFollowersKey}`];
+        if (cachedFollowers) {
+            //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
+            let etag = cachedFollowers.headers.get('ETag');
+            httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
+        }
 
         return this.http.get<User[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/followers`, httpOptions)
             .pipe(
-                tap((response: any) => console.log(`retrieved ${response.length} followers from ${userLogin}`)),
-                catchError(this.handleError('getUserFollowers', []))
+                tap((response: any) => {
+                    console.log(`[HTTP] retrieved ${response.body.length} followers from ${userLogin}`)
+
+                    //Save cache
+                    this.cache[`${userLogin}${this.cacheFollowersKey}`] = response;
+                }),
+                map((response: any) => response.body),
+                catchError(err => {
+                    //Error 304: Not Modified -> Get info from Cache
+                    if (err.status == 304) {
+                        console.log(`[CACHE] retrieved ${cachedFollowers.body.length} followers from ${userLogin}`)
+                        return of(cachedFollowers.body);
+                    } else {
+                        this.handleError('getUserFollowers', []);
+                    }
+                })
             );
     }
 
