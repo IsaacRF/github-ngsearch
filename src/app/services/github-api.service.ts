@@ -20,8 +20,6 @@ export class GithubApiService {
         'Authorization': `token ${this.oAuthToken}`
     })
 
-    private cache = {};
-
     /**
      * Base service constructor
      * @param http Http cliente injection
