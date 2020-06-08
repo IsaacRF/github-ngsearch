@@ -1,27 +1,24 @@
-# GithubNgsearch
+# Github Ngsearch
+Author: IsaacRF239
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
+Deployed app URL: http://isaacrf.com/apps/github-ngsearch
 
-## Development server
+Angular test app that consumes GitHub API to retrieve data. This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Usage instructions
 
-## Code scaffolding
+Production app can be accesed on http://isaacrf.com/apps/github-ngsearch
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1.- Theme button can be used to dinamically swap themes
+2.- Use the search bar to search for users by their login name. The search is performed as you type
+3.- Click an user to go to the user detail
 
-## Build
+## Project Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Development server
 
-## Running unit tests
+Run `ng serve --open` for a dev server. The app will automatically reload if you change any of the source files.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Build
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Run `ng build --prod --base-href ./` to build the project production ready. The build artifacts will be stored in the `dist/` directory.
