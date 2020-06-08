@@ -1,27 +1,40 @@
-# GithubNgsearch
+# Github Ngsearch
+Author: IsaacRF239
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
+Deployed app URL: http://isaacrf.com/apps/github-ngsearch
 
-## Development server
+Angular test app that consumes GitHub API to retrieve data. This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Usage instructions
 
-## Code scaffolding
+Production app can be accesed on http://isaacrf.com/apps/github-ngsearch
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Search
+Use the search bar to search for users by their login name. The search is performed as you type
 
-## Build
+![Search](https://user-images.githubusercontent.com/2803925/83993510-e6eea280-a953-11ea-9202-693eac95ffbf.gif)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Theming
+Theme button can be used to dinamically swap themes
 
-## Running unit tests
+![Theming](https://user-images.githubusercontent.com/2803925/83993507-e5bd7580-a953-11ea-80b2-799a2a032f42.gif)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### User Detail
 
-## Running end-to-end tests
+Click an user to go to the user detail
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+![Details](https://user-images.githubusercontent.com/2803925/83993503-e3f3b200-a953-11ea-9e6b-630633d8624c.gif)
 
-## Further help
+## Project Build
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Development server
+
+Run `ng serve --open` for a dev server. The app will automatically reload if you change any of the source files.
+
+### Build
+
+Run `ng build --prod --base-href ./` to build the project production ready. The build artifacts will be stored in the `dist/` directory.
+
+## TODO List
+- [ ] Cache user detail
+- [ ] Animate page transition
