@@ -20,10 +20,12 @@ export class UserSearchComponent implements OnInit {
     ngOnInit(): void {
         let _this = this;
 
+        $('.card-container').hide();
+
         this.route.params.subscribe(routeParams => {
             this.searchTerm = routeParams.searchTerm;
             if (this.searchTerm) {
-                $('.no-search').fadeOut();
+                $('.no-search').hide();
 
                 $('.card-container').fadeOut(400, () => {
                     $('.spinner-loader').fadeIn();
@@ -33,7 +35,11 @@ export class UserSearchComponent implements OnInit {
                         .subscribe(users => {
                             $('.spinner-loader').fadeOut(400, () => {
                                 if (_this.searchTerm) {
-                                    _this.users = users;
+                                    if (users.length > 0) {
+                                        _this.users = users;
+                                    } else {
+                                        _this.users = null;
+                                    }
                                     $('.card-container').fadeIn();
                                 }
                             });

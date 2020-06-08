@@ -9,6 +9,22 @@
     fontPrimary: #FFFFFF,
     fontSecondary: #24292E
 )) using ($colors) {
+    .no-search {
+        svg {
+            fill: darken(map-get($colors, secondary), 10%);
+        }
+    }
+
+    .card-container {
+        .no-results {
+            svg {
+                path {
+                    fill: darken(map-get($colors, secondary), 10%);
+                }
+            }
+        }
+    }
+
     footer {
         &, & a {
             color: darken(map-get($colors, fontPrimary), 50%);

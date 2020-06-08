@@ -75,7 +75,17 @@
 
         .no-search {
             svg {
-                fill: darken(map-get($colors, secondary), 10%);
+                fill: map-get($colors, secondary);
+            }
+        }
+
+        .card-container {
+            .no-results {
+                svg {
+                    path {
+                        fill: map-get($colors, secondary);
+                    }
+                }
             }
         }
 
