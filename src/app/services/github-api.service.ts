@@ -20,6 +20,8 @@ export class GithubApiService {
         'Authorization': `token ${this.oAuthToken}`
     })
 
+    private cache = {};
+
     /**
      * Base service constructor
      * @param http Http cliente injection
@@ -63,7 +65,7 @@ export class GithubApiService {
         return this.http.get<UserDetails>(`${this.apiUserDetailsEndpoint}/${userLogin}`, httpOptions)
             .pipe(
                 tap((response: any) => console.log(`retrieved details of ${userLogin} / id: ${response.id}`)),
-                catchError(this.handleError('searchUsers', []))
+                catchError(this.handleError('getUserDetails', []))
             );
     }
 
