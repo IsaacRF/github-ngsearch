@@ -34,3 +34,7 @@ Run `ng serve --open` for a dev server. The app will automatically reload if you
 ### Build
 
 Run `ng build --prod --base-href ./` to build the project production ready. The build artifacts will be stored in the `dist/` directory.
+
+## TODO List
+- [ ] Cache user detail
+- [ ] Animate page transition
