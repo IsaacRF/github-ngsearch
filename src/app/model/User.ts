@@ -3,10 +3,10 @@
  */
 export class User {
     login: string;
-    avatarUrl: string;
+    avatar_url: string;
 
-    constructor(login: string, avatarUrl: string) {
+    constructor(login: string, avatar_url: string) {
         this.login = login;
-        this.avatarUrl = avatarUrl;
+        this.avatar_url = avatar_url;
     }
 }

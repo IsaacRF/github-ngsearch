@@ -89,6 +89,12 @@
             }
         }
 
+        .bottom-wrapper {
+            .user-details {
+                color: map-get($colors, fontSecondary);
+            }
+        }
+
         @content($colors);
     }
 

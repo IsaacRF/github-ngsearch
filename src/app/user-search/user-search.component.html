@@ -19,7 +19,7 @@
 
     <div *ngFor="let user of users" class="card-wrapper">
         <a class="card" routerLink="/user-detail/{{user.login}}" title="{{user.login}}">
-            <img src="{{user.avatarUrl}}" alt="{{user.login}} Profile Picture">
+            <img src="{{user.avatar_url}}" alt="{{user.login}} Profile Picture">
             <span>{{user.login}}</span>
         </a>
     </div>

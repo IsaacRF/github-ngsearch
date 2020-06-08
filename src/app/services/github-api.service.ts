@@ -1,8 +1,10 @@
-import { User } from './../model/User';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { User } from './../model/User';
+import { UserDetails } from '../model/UserDetails';
+import { Repo } from '../model/Repo';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +13,12 @@ export class GithubApiService {
     //NOTE: This token has no private permissions enabled, and is here only for increasing GitHub API call limits for testing purposes
     private oAuthToken = "bab492878a9cb241f70139aa3152dfecb263765b";
     private apiUserEndpoint = "https://api.github.com/search/users";
+    private apiUserDetailsEndpoint = "https://api.github.com/users";
+
+    private httpHeaders = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `token ${this.oAuthToken}`
+    })
 
     /**
      * Base service constructor
@@ -27,10 +35,7 @@ export class GithubApiService {
      */
     searchUsers(userName: string): Observable<User[]> {
         const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': this.oAuthToken
-            }),
+            headers: this.httpHeaders,
             params: new HttpParams().set('q', userName)
         };
 
@@ -43,6 +48,54 @@ export class GithubApiService {
                     });
                 }),
                 catchError(this.handleError('searchUsers', []))
+            );
+    }
+
+    /**
+     * Retrieves GitHub user details
+     *
+     * GET Http Call
+     * @param userLogin User login name
+     */
+    getUserDetails(userLogin: string): Observable<UserDetails> {
+        const httpOptions = { headers: this.httpHeaders };
+
+        return this.http.get<UserDetails>(`${this.apiUserDetailsEndpoint}/${userLogin}`, httpOptions)
+            .pipe(
+                tap((response: any) => console.log(`retrieved details of ${userLogin} / id: ${response.id}`)),
+                catchError(this.handleError('searchUsers', []))
+            );
+    }
+
+    /**
+     * Retrieves GitHub user repos
+     *
+     * GET Http Call
+     * @param userLogin User login name
+     */
+    getUserRepos(userLogin: string): Observable<Repo[]> {
+        const httpOptions = { headers: this.httpHeaders };
+
+        return this.http.get<Repo[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/repos`, httpOptions)
+            .pipe(
+                tap((response: any) => console.log(`retrieved ${response.length} repos from ${userLogin}`)),
+                catchError(this.handleError('getUserRepos', []))
+            );
+    }
+
+    /**
+     * Retrieves GitHub user followers
+     *
+     * GET Http Call
+     * @param userLogin User login name
+     */
+    getUserFollowers(userLogin: string): Observable<User[]> {
+        const httpOptions = { headers: this.httpHeaders };
+
+        return this.http.get<User[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/followers`, httpOptions)
+            .pipe(
+                tap((response: any) => console.log(`retrieved ${response.length} followers from ${userLogin}`)),
+                catchError(this.handleError('getUserFollowers', []))
             );
     }
 
