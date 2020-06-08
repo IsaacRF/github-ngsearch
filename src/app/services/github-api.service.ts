@@ -20,6 +20,11 @@ export class GithubApiService {
         'Authorization': `token ${this.oAuthToken}`
     })
 
+    //[CACHE]
+    private cache = {};
+    private cacheFollowersKey = "/followers";
+    private cacheReposKey = "/repos";
+
     /**
      * Base service constructor
      * @param http Http cliente injection
@@ -58,12 +63,34 @@ export class GithubApiService {
      * @param userLogin User login name
      */
     getUserDetails(userLogin: string): Observable<UserDetails> {
-        const httpOptions = { headers: this.httpHeaders };
+        let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
+
+        let cachedDetails = this.cache[userLogin];
+        if (cachedDetails) {
+            //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
+            let etag = cachedDetails.headers.get('ETag');
+            httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
+        }
 
         return this.http.get<UserDetails>(`${this.apiUserDetailsEndpoint}/${userLogin}`, httpOptions)
             .pipe(
-                tap((response: any) => console.log(`retrieved details of ${userLogin} / id: ${response.id}`)),
-                catchError(this.handleError('searchUsers', []))
+                tap((response: any) => {
+                    console.log(`[HTTP] retrieved details of ${userLogin} / id: ${response.body.id}`)
+
+                    //Save cache
+                    this.cache[userLogin] = response;
+                    response = response.body;
+                }),
+                map((response: any) => response.body),
+                catchError(err => {
+                    //Error 304: Not Modified -> Get info from Cache
+                    if (err.status == 304) {
+                        console.log(`[CACHE] retrieved details of ${userLogin}`)
+                        return of(cachedDetails.body);
+                    } else {
+                        this.handleError('getUserDetails', []);
+                    }
+                })
             );
     }
 
