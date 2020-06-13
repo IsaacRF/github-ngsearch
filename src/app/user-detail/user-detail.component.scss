@@ -1,3 +1,4 @@
+@import '../../styles/resources';
 
 :host {
     padding-top: 20px;
@@ -104,14 +105,33 @@
             width: 50%;
             padding: 5px;
 
-            @media screen and (max-width: 767px) {
+            @media screen and (max-width: 980px) {
                 flex-basis: 100%;
                 width: 100%;
             }
 
+            .ratio-preserver {
+                @include aspect-ratio(3, 1);
+                min-height: 110px;
+
+                @media screen and (max-width: 980px) {
+                    @include aspect-ratio(5, 1);
+                }
+
+                .listing-item {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
             .listing-item {
+                overflow: hidden;
                 padding: 10px 15px;
-                min-height: 118px;
 
                 &.repository {
                     align-items: flex-start;
