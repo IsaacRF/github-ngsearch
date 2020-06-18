@@ -21,7 +21,8 @@ export class GithubApiService {
     })
 
     //[CACHE]
-    private cache = {};
+    private cache = require('memory-cache');
+    private cacheEntryLifetimeMs = 3600000;
     private cacheFollowersKey = "/followers";
     private cacheReposKey = "/repos";
 
@@ -65,7 +66,7 @@ export class GithubApiService {
     getUserDetails(userLogin: string): Observable<UserDetails> {
         let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
-        let cachedDetails = this.cache[userLogin];
+        let cachedDetails = this.cache.get(userLogin);
         if (cachedDetails) {
             //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
             let etag = cachedDetails.headers.get('ETag');
@@ -78,7 +79,10 @@ export class GithubApiService {
                     console.log(`[HTTP] retrieved details of ${userLogin} / id: ${response.body.id}`)
 
                     //Save cache
-                    this.cache[userLogin] = response;
+                    this.cache.put(userLogin, response, this.cacheEntryLifetimeMs, function(key, value) {
+                        console.log(`[--CACHE] User details cache ${key} has expired`);
+                    });
+                    console.log(`[++CACHE] Cached user details for ${userLogin}`);
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
@@ -102,7 +106,7 @@ export class GithubApiService {
     getUserRepos(userLogin: string): Observable<Repo[]> {
         let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
-        let cachedRepos = this.cache[`${userLogin}${this.cacheReposKey}`];
+        let cachedRepos = this.cache.get(`${userLogin}${this.cacheReposKey}`);
         if (cachedRepos) {
             //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
             let etag = cachedRepos.headers.get('ETag');
@@ -115,7 +119,10 @@ export class GithubApiService {
                     console.log(`[HTTP] retrieved ${response.body.length} repos from ${userLogin}`)
 
                     //Save cache
-                    this.cache[`${userLogin}${this.cacheReposKey}`] = response;
+                    this.cache.put(`${userLogin}${this.cacheReposKey}`, response, this.cacheEntryLifetimeMs, function(key, value) {
+                        console.log(`[--CACHE] User repos cache ${key} has expired`);
+                    });
+                    console.log(`[++CACHE] Cached user repos for ${userLogin}`);
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
@@ -139,7 +146,7 @@ export class GithubApiService {
     getUserFollowers(userLogin: string): Observable<User[]> {
         let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
-        let cachedFollowers = this.cache[`${userLogin}${this.cacheFollowersKey}`];
+        let cachedFollowers = this.cache.get(`${userLogin}${this.cacheFollowersKey}`);
         if (cachedFollowers) {
             //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
             let etag = cachedFollowers.headers.get('ETag');
@@ -152,7 +159,10 @@ export class GithubApiService {
                     console.log(`[HTTP] retrieved ${response.body.length} followers from ${userLogin}`)
 
                     //Save cache
-                    this.cache[`${userLogin}${this.cacheFollowersKey}`] = response;
+                    this.cache.put(`${userLogin}${this.cacheFollowersKey}`, response, this.cacheEntryLifetimeMs, function(key, value) {
+                        console.log(`[--CACHE] User followers cache ${key} has expired`);
+                    });
+                    console.log(`[++CACHE] Cached user followers for ${userLogin}`);
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
