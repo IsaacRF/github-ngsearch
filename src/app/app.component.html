@@ -38,8 +38,8 @@
 
     </div>
 
-    <div class="content" role="main">
-        <router-outlet></router-outlet>
+    <div class="content" role="main" [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
     </div>
 
     <!-- Footer -->

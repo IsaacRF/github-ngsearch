@@ -37,8 +37,10 @@
     flex-direction: column;
     justify-content: stretch;
     align-items: normal;
+    width: 100%;
     min-height: 100vh;
     min-width: 300px;
+    overflow-x: hidden;
 
     .toolbar {
         position: fixed;

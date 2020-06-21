@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import * as $ from 'jquery';
+import { slideInAnimation } from 'src/styles/animations';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
+    animations: [
+        slideInAnimation
+        // animation triggers go here
+    ]
 })
 export class AppComponent implements OnInit {
     title = 'GitHub NgSearch';
@@ -15,7 +20,7 @@ export class AppComponent implements OnInit {
     searchTerm: string = '';
     searchTimer;
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) { }
 
     ngOnInit() {
         window.addEventListener('resize', this.checkIsMobile);
@@ -39,7 +44,7 @@ export class AppComponent implements OnInit {
 
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown').forEach(element => {
-                if ( this.isMobile || !element.parentElement.classList.contains('only-mobile') ) {
+                if (this.isMobile || !element.parentElement.classList.contains('only-mobile')) {
                     _this.closeAllExpandableMenus();
                 }
             });
@@ -87,5 +92,9 @@ export class AppComponent implements OnInit {
 
     checkIsMobile() {
         this.isMobile = window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    prepareRoute(outlet: RouterOutlet) {
+        return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
     }
 }

@@ -6,8 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
     { path: '', redirectTo: '/user-search', pathMatch: 'full' },
     { path: 'user-search', component: UserSearchComponent },
-    { path: 'user-search/:searchTerm', component: UserSearchComponent },
-    { path: 'user-detail/:userLogin', component: UserDetailComponent },
+    { path: 'user-search/:searchTerm', component: UserSearchComponent, data: { animation: 'UserSearchPage' } },
+    { path: 'user-detail/:userLogin', component: UserDetailComponent, data: { animation: 'UserDetailPage' } },
 ];
 
 @NgModule({
