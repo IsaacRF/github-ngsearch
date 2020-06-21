@@ -104,4 +104,8 @@ button {
     border: 12px solid rgba(#EEE, 0.4);
     border-top-color: #0099ff;
     animation: spinner .6s linear infinite;
+
+    &.active {
+        display: block;
+    }
 }
