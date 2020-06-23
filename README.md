@@ -3,6 +3,8 @@ Author: IsaacRF239
 
 Deployed app URL: http://isaacrf.com/apps/github-ngsearch
 
+License: [GNU GPLv3](https://github.com/IsaacRF/github-ngsearch#license)
+
 Angular test app that consumes GitHub API to retrieve data. This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
 ## Usage instructions
@@ -58,3 +60,10 @@ Run `ng serve --open` for a dev server. The app will automatically reload if you
 ### Build
 
 Run `ng build --prod --base-href ./` to build the project production ready. The build artifacts will be stored in the `dist/` directory.
+
+## License
+This project uses a GNU General Public License v3.0. This means that:
+
+1. You can freely use, copy, modify and redistribute this software, as long as it remains open source.
+2. You must keep original copyright information and notices. Removing them is not permitted.
+3. If you modify and / o redistribute this code, you must use the same license (GNU General Public License v3.0).
