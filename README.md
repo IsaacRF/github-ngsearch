@@ -1,7 +1,9 @@
 # Github Ngsearch
-- Author: IsaacRF239
-- Deployed app URL: http://isaacrf.com/apps/github-ngsearch
-- License: [GNU GPLv3](https://github.com/IsaacRF/github-ngsearch#license)
+**Author**: IsaacRF239
+
+**Deployed app URL**: http://isaacrf.com/apps/github-ngsearch
+
+**License**: [GNU GPLv3](https://github.com/IsaacRF/github-ngsearch#license)
 
 Angular test app that consumes GitHub API to retrieve data. This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
