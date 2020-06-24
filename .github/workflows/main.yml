@@ -36,6 +36,6 @@ jobs:
     
     #Run tests
     - name: Test
-      run: npm test
+      run: npm test -- --configuration=ci
     - name: E2E
-      run: npm run e2e
+      run: npm run e2e -- --configuration=ci
