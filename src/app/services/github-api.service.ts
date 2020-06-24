@@ -3,8 +3,8 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { User } from './../model/User';
-import { UserDetails } from '../model/UserDetails';
-import { Repo } from '../model/Repo';
+import { UserDetails } from './../model/UserDetails';
+import { Repo } from './../model/Repo';
 
 @Injectable({
     providedIn: 'root'
@@ -84,7 +84,8 @@ export class GithubApiService {
                     });
                     console.log(`[++CACHE] Cached user details for ${userLogin}`);
                 }),
-                map((response: any) => response.body),
+                map((response: any) => new UserDetails(response.body.login, response.body.name, response.body.avatar_url, response.body.bio,
+                    response.body.company, response.body.location, response.body.email, response.body.blog)),
                 catchError(err => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
@@ -124,7 +125,11 @@ export class GithubApiService {
                     });
                     console.log(`[++CACHE] Cached user repos for ${userLogin}`);
                 }),
-                map((response: any) => response.body),
+                map((response: any) => {
+                    return response.body.map(repo => {
+                        return new Repo(repo.name, repo.description, repo.html_url);
+                    });
+                }),
                 catchError(err => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
@@ -164,7 +169,11 @@ export class GithubApiService {
                     });
                     console.log(`[++CACHE] Cached user followers for ${userLogin}`);
                 }),
-                map((response: any) => response.body),
+                map((response: any) => {
+                    return response.body.map(user => {
+                        return new User(user.login, user.avatar_url);
+                    });
+                }),
                 catchError(err => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
