@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
     theme = 'light-theme';
     isMobile = false;
 
-    searchTerm: string = '';
+    searchTerm = '';
     searchTimer;
 
     constructor(private router: Router) { }
@@ -25,15 +25,15 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         window.addEventListener('resize', this.checkIsMobile);
         this.checkIsMobile();
-        let _this = this;
+        const that = this;
 
-        //Events to auto-control expandable menus without further html code
+        // Events to auto-control expandable menus without further html code
         document.querySelectorAll('.expandable-menu').forEach(element => {
             element.querySelector('button').addEventListener('click', ev => {
                 ev.stopPropagation();
-                let dropdown = element.querySelector('.dropdown');
-                let input = dropdown.querySelector('input');
-                _this.closeAllExpandableMenus(dropdown);
+                const dropdown = element.querySelector('.dropdown');
+                const input = dropdown.querySelector('input');
+                that.closeAllExpandableMenus(dropdown);
                 $(dropdown).slideToggle();
 
                 if (input !== null) {
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown').forEach(element => {
                 if (this.isMobile || !element.parentElement.classList.contains('only-mobile')) {
-                    _this.closeAllExpandableMenus();
+                    that.closeAllExpandableMenus();
                 }
             });
         });
@@ -61,12 +61,12 @@ export class AppComponent implements OnInit {
      * Navigate to search view
      */
     search() {
-        let _this = this;
+        const that = this;
 
         clearTimeout(this.searchTimer);
         this.searchTimer = setTimeout(() => {
-            this.router.navigateByUrl('user-search/' + _this.searchTerm);
-        }, 500)
+            this.router.navigateByUrl('user-search/' + that.searchTerm);
+        }, 500);
     }
 
 
@@ -95,6 +95,6 @@ export class AppComponent implements OnInit {
     }
 
     prepareRoute(outlet: RouterOutlet) {
-        return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+        return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
     }
 }

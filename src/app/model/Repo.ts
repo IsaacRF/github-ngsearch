@@ -4,17 +4,17 @@
 export class Repo {
     name: string;
     description: string;
-    html_url: string;
+    htmlUrl: string;
 
     /**
      * Base constructor
-     * @param name User login name
-     * @param description User avatar URL
-     * @param html_url User name
+     * @param name Repo name
+     * @param description Repo description
+     * @param htmlUrl Repo URL
      */
-    constructor(name: string, description: string, html_url: string) {
+    constructor(name: string, description: string, htmlUrl: string) {
         this.name = name;
         this.description = description;
-        this.html_url = html_url;
+        this.htmlUrl = htmlUrl;
     }
 }

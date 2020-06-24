@@ -17,8 +17,8 @@ describe('GithubApiService', () => {
             providers: [GithubApiService]
         });
         injector = getTestBed();
-        service = injector.get(GithubApiService);
-        httpMock = injector.get(HttpTestingController);
+        service = injector.inject(GithubApiService);
+        httpMock = injector.inject(HttpTestingController);
     });
 
     afterEach(() => {

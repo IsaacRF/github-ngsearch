@@ -10,21 +10,21 @@ import { Repo } from '../model/Repo';
     providedIn: 'root'
 })
 export class GithubApiService {
-    //NOTE: This token has no private permissions enabled, and is here only for increasing GitHub API call limits for testing purposes
-    private oAuthToken = "bab492878a9cb241f70139aa3152dfecb263765b";
-    public apiUserEndpoint = "https://api.github.com/search/users";
-    public apiUserDetailsEndpoint = "https://api.github.com/users";
+    // NOTE: This token has no private permissions enabled, and is here only for increasing GitHub API call limits for testing purposes
+    private oAuthToken = 'bab492878a9cb241f70139aa3152dfecb263765b';
+    public apiUserEndpoint = 'https://api.github.com/search/users';
+    public apiUserDetailsEndpoint = 'https://api.github.com/users';
 
     private httpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': `token ${this.oAuthToken}`
-    })
+        Authorization: `token ${this.oAuthToken}`
+    });
 
-    //[CACHE]
+    // [CACHE]
     private cache = require('memory-cache');
     private cacheEntryLifetimeMs = 3600000;
-    private cacheFollowersKey = "/followers";
-    private cacheReposKey = "/repos";
+    private cacheFollowersKey = '/followers';
+    private cacheReposKey = '/repos';
 
     /**
      * Base service constructor
@@ -64,31 +64,31 @@ export class GithubApiService {
      * @param userLogin User login name
      */
     getUserDetails(userLogin: string): Observable<UserDetails> {
-        let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
+        const httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
-        let cachedDetails = this.cache.get(userLogin);
+        const cachedDetails = this.cache.get(userLogin);
         if (cachedDetails) {
-            //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
-            let etag = cachedDetails.headers.get('ETag');
+            // Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
+            const etag = cachedDetails.headers.get('ETag');
             httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
         }
 
         return this.http.get<UserDetails>(`${this.apiUserDetailsEndpoint}/${userLogin}`, httpOptions)
             .pipe(
                 tap((response: any) => {
-                    console.log(`[HTTP] retrieved details of ${userLogin} / id: ${response.body.id}`)
+                    console.log(`[HTTP] retrieved details of ${userLogin} / id: ${response.body.id}`);
 
-                    //Save cache
-                    this.cache.put(userLogin, response, this.cacheEntryLifetimeMs, function(key, value) {
+                    // Save cache
+                    this.cache.put(userLogin, response, this.cacheEntryLifetimeMs, (key, value) => {
                         console.log(`[--CACHE] User details cache ${key} has expired`);
                     });
                     console.log(`[++CACHE] Cached user details for ${userLogin}`);
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
-                    //Error 304: Not Modified -> Get info from Cache
-                    if (err.status == 304) {
-                        console.log(`[CACHE] retrieved details of ${userLogin}`)
+                    // Error 304: Not Modified -> Get info from Cache
+                    if (err.status === 304) {
+                        console.log(`[CACHE] retrieved details of ${userLogin}`);
                         return of(cachedDetails.body);
                     } else {
                         this.handleError('getUserDetails', []);
@@ -104,31 +104,31 @@ export class GithubApiService {
      * @param userLogin User login name
      */
     getUserRepos(userLogin: string): Observable<Repo[]> {
-        let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
+        const httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
-        let cachedRepos = this.cache.get(`${userLogin}${this.cacheReposKey}`);
+        const cachedRepos = this.cache.get(`${userLogin}${this.cacheReposKey}`);
         if (cachedRepos) {
-            //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
-            let etag = cachedRepos.headers.get('ETag');
+            // Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
+            const etag = cachedRepos.headers.get('ETag');
             httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
         }
 
         return this.http.get<Repo[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/repos`, httpOptions)
             .pipe(
                 tap((response: any) => {
-                    console.log(`[HTTP] retrieved ${response.body.length} repos from ${userLogin}`)
+                    console.log(`[HTTP] retrieved ${response.body.length} repos from ${userLogin}`);
 
-                    //Save cache
-                    this.cache.put(`${userLogin}${this.cacheReposKey}`, response, this.cacheEntryLifetimeMs, function(key, value) {
+                    // Save cache
+                    this.cache.put(`${userLogin}${this.cacheReposKey}`, response, this.cacheEntryLifetimeMs, (key, value) => {
                         console.log(`[--CACHE] User repos cache ${key} has expired`);
                     });
                     console.log(`[++CACHE] Cached user repos for ${userLogin}`);
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
-                    //Error 304: Not Modified -> Get info from Cache
-                    if (err.status == 304) {
-                        console.log(`[CACHE] retrieved ${cachedRepos.body.length} repos from ${userLogin}`)
+                    // Error 304: Not Modified -> Get info from Cache
+                    if (err.status === 304) {
+                        console.log(`[CACHE] retrieved ${cachedRepos.body.length} repos from ${userLogin}`);
                         return of(cachedRepos.body);
                     } else {
                         this.handleError('getUserRepos', []);
@@ -144,31 +144,31 @@ export class GithubApiService {
      * @param userLogin User login name
      */
     getUserFollowers(userLogin: string): Observable<User[]> {
-        let httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
+        const httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
-        let cachedFollowers = this.cache.get(`${userLogin}${this.cacheFollowersKey}`);
+        const cachedFollowers = this.cache.get(`${userLogin}${this.cacheFollowersKey}`);
         if (cachedFollowers) {
-            //Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
-            let etag = cachedFollowers.headers.get('ETag');
+            // Custom API header to return error 304 in case data hasn't been modified based on a hash (ETag)
+            const etag = cachedFollowers.headers.get('ETag');
             httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
         }
 
         return this.http.get<User[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/followers`, httpOptions)
             .pipe(
                 tap((response: any) => {
-                    console.log(`[HTTP] retrieved ${response.body.length} followers from ${userLogin}`)
+                    console.log(`[HTTP] retrieved ${response.body.length} followers from ${userLogin}`);
 
-                    //Save cache
-                    this.cache.put(`${userLogin}${this.cacheFollowersKey}`, response, this.cacheEntryLifetimeMs, function(key, value) {
+                    // Save cache
+                    this.cache.put(`${userLogin}${this.cacheFollowersKey}`, response, this.cacheEntryLifetimeMs, (key, value) => {
                         console.log(`[--CACHE] User followers cache ${key} has expired`);
                     });
                     console.log(`[++CACHE] Cached user followers for ${userLogin}`);
                 }),
                 map((response: any) => response.body),
                 catchError(err => {
-                    //Error 304: Not Modified -> Get info from Cache
-                    if (err.status == 304) {
-                        console.log(`[CACHE] retrieved ${cachedFollowers.body.length} followers from ${userLogin}`)
+                    // Error 304: Not Modified -> Get info from Cache
+                    if (err.status === 304) {
+                        console.log(`[CACHE] retrieved ${cachedFollowers.body.length} followers from ${userLogin}`);
                         return of(cachedFollowers.body);
                     } else {
                         this.handleError('getUserFollowers', []);

@@ -18,7 +18,7 @@ export class UserSearchComponent implements OnInit {
         private route: ActivatedRoute) { }
 
     ngOnInit(): void {
-        let _this = this;
+        const that = this;
 
         $('.card-container').hide();
 
@@ -34,11 +34,11 @@ export class UserSearchComponent implements OnInit {
                     this.githubApiService.searchUsers(this.searchTerm)
                         .subscribe(users => {
                             $('.spinner-loader').fadeOut(400, () => {
-                                if (_this.searchTerm) {
+                                if (that.searchTerm) {
                                     if (users.length > 0) {
-                                        _this.users = users;
+                                        that.users = users;
                                     } else {
-                                        _this.users = null;
+                                        that.users = null;
                                     }
                                     $('.card-container').fadeIn();
                                 }
@@ -47,7 +47,7 @@ export class UserSearchComponent implements OnInit {
                 });
             } else {
                 $('.card-container').fadeOut(400, () => {
-                    _this.users = null;
+                    that.users = null;
                     $('.no-search').fadeIn();
                 });
             }
