@@ -12,8 +12,8 @@ import { Repo } from '../model/Repo';
 export class GithubApiService {
     //NOTE: This token has no private permissions enabled, and is here only for increasing GitHub API call limits for testing purposes
     private oAuthToken = "bab492878a9cb241f70139aa3152dfecb263765b";
-    private apiUserEndpoint = "https://api.github.com/search/users";
-    private apiUserDetailsEndpoint = "https://api.github.com/users";
+    public apiUserEndpoint = "https://api.github.com/search/users";
+    public apiUserDetailsEndpoint = "https://api.github.com/users";
 
     private httpHeaders = new HttpHeaders({
         'Content-Type': 'application/json',
