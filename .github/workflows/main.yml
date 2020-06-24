@@ -22,11 +22,20 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Run tests
-    #- name: Angular run Karma tests
-    #  uses: ahmedrizwan/angular-karma-test-action@v1.0.8
-    - name: Angular Github Actions
-      uses: mayurrawte/github-angular-actions@latest
+    # Build
+    - name: Use Node.js 12.8
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.8
+    - name: Install dependencies
+      run: npm install
+    - name: Lint
+      run: npm run lint
+    - name: Build
+      run: npm run build -- --prod
     
-    - name: Angular run Karma tests
-      run: ng test
+    #Run tests
+    - name: Test
+      run: npm test -- --configuration=ci
+    - name: E2E
+      run: npm run e2e -- --configuration=ci
