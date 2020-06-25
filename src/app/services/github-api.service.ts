@@ -84,8 +84,9 @@ export class GithubApiService {
                     });
                     console.log(`[++CACHE] Cached user details for ${userLogin}`);
                 }),
-                map((response: any) => new UserDetails(response.body.login, response.body.name, response.body.avatar_url, response.body.bio,
-                    response.body.company, response.body.location, response.body.email, response.body.blog)),
+                map((response: any) => new UserDetails(response.body.login, response.body.name,
+                    response.body.avatar_url || response.body.avatarUrl, response.body.bio, response.body.company,
+                    response.body.location, response.body.email, response.body.blog)),
                 catchError(err => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
