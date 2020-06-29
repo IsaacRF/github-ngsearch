@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import * as $ from 'jquery';
 import { slideInAnimation } from 'src/styles/animations';
+import { fromEvent } from 'rxjs';
+import { filter, debounceTime, distinctUntilChanged, tap, map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
@@ -12,13 +14,12 @@ import { slideInAnimation } from 'src/styles/animations';
         // animation triggers go here
     ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
     title = 'GitHub NgSearch';
     theme = 'light-theme';
     isMobile = false;
 
-    searchTerm = '';
-    searchTimer;
+    @ViewChild("searchBox") searchBox: ElementRef;
 
     constructor(private router: Router) { }
 
@@ -56,14 +57,26 @@ export class AppComponent implements OnInit {
         });
     }
 
+    ngAfterViewInit() {
+        //Apply events to elements
+        fromEvent(this.searchBox.nativeElement, 'input')
+            .pipe(
+                map((event: InputEvent) => (event.target as HTMLInputElement).value),
+                filter(Boolean),
+                debounceTime(300),
+                distinctUntilChanged()
+            )
+            .subscribe((text: string) => {
+                this.search(text);
+            });
+    }
+
     /**
      * Navigate to search view
+     * @param searchTerm Term to search for
      */
-    search() {
-        clearTimeout(this.searchTimer);
-        this.searchTimer = setTimeout(() => {
-            this.router.navigateByUrl('user-search/' + this.searchTerm);
-        }, 500);
+    search(searchTerm: string) {
+        this.router.navigateByUrl('user-search/' + searchTerm);
     }
 
 
