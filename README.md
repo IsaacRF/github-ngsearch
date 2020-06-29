@@ -1,4 +1,6 @@
 # Github Ngsearch
+![CI](https://github.com/IsaacRF/github-ngsearch/workflows/CI/badge.svg)
+
 **Author**: IsaacRF239
 
 **Deployed app URL**: http://isaacrf.com/apps/github-ngsearch
