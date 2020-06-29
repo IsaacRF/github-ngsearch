@@ -25,7 +25,6 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         window.addEventListener('resize', this.checkIsMobile);
         this.checkIsMobile();
-        const that = this;
 
         // Events to auto-control expandable menus without further html code
         document.querySelectorAll('.expandable-menu').forEach(element => {
@@ -33,7 +32,7 @@ export class AppComponent implements OnInit {
                 ev.stopPropagation();
                 const dropdown = element.querySelector('.dropdown');
                 const input = dropdown.querySelector('input');
-                that.closeAllExpandableMenus(dropdown);
+                this.closeAllExpandableMenus(dropdown);
                 $(dropdown).slideToggle();
 
                 if (input !== null) {
@@ -45,7 +44,7 @@ export class AppComponent implements OnInit {
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown').forEach(element => {
                 if (this.isMobile || !element.parentElement.classList.contains('only-mobile')) {
-                    that.closeAllExpandableMenus();
+                    this.closeAllExpandableMenus();
                 }
             });
         });
@@ -61,11 +60,9 @@ export class AppComponent implements OnInit {
      * Navigate to search view
      */
     search() {
-        const that = this;
-
         clearTimeout(this.searchTimer);
         this.searchTimer = setTimeout(() => {
-            this.router.navigateByUrl('user-search/' + that.searchTerm);
+            this.router.navigateByUrl('user-search/' + this.searchTerm);
         }, 500);
     }
 
