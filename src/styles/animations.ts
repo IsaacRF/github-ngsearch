@@ -1,6 +1,6 @@
-import { trigger, animate, animateChild, transition, group, style, query } from '@angular/animations';
+import { trigger, animate, animateChild, transition, group, style, query, state } from '@angular/animations';
 
-export const slideInAnimation =
+export const routeSlideRightLeftAnimation =
     trigger('routeAnimations', [
         transition('UserSearchPage => UserDetailPage', [
             style({ position: 'relative' }),
@@ -49,5 +49,32 @@ export const slideInAnimation =
                 ])
             ]),
             query(':enter', animateChild()),
+        ])
+    ]);
+
+export const slideInOutAnimation =
+    trigger('slideInOutAnimation', [
+        state('true',
+            style({
+                display: 'block',
+                'transform-origin': 'top'
+            }),
+        ),
+        state('false',
+            style({
+                display: 'none',
+                'transform-origin': 'top'
+            })
+        ),
+        transition('false => true', [
+            style({
+                display: 'block',
+                transform: 'scaleY(0)',
+                'transform-origin': 'top'
+            }),
+            animate('400ms ease-in-out', style({ transform: 'scaleY(1)' }))
+        ]),
+        transition('true => false', [
+            animate('400ms ease-in-out', style({ transform: 'scaleY(0)' }))
         ])
     ]);

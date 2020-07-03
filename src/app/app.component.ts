@@ -1,64 +1,63 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import * as $ from 'jquery';
-import { slideInAnimation } from 'src/styles/animations';
-import { fromEvent } from 'rxjs';
-import { filter, debounceTime, distinctUntilChanged, tap, map } from 'rxjs/operators';
+import { routeSlideRightLeftAnimation, slideInOutAnimation } from 'src/styles/animations';
+import { fromEvent, Subscription } from 'rxjs';
+import { filter, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     animations: [
-        slideInAnimation
-        // animation triggers go here
+        routeSlideRightLeftAnimation,
+        slideInOutAnimation
     ]
 })
 export class AppComponent implements OnInit, AfterViewInit {
     title = 'GitHub NgSearch';
     theme = 'light-theme';
     isMobile = false;
+    resizeSubscription: Subscription;
+    documentClickSubscription: Subscription;
 
-    @ViewChild("searchBox") searchBox: ElementRef;
+    @ViewChild('searchBox') searchBox: ElementRef;
+
+    /**
+     * States for the different dropdown + button combos
+     * true: open
+     * false: closed
+     */
+    dropwdownStates: any = {
+        theme: false,
+        search: false
+    }
 
     constructor(private router: Router) { }
 
     ngOnInit() {
-        window.addEventListener('resize', this.checkIsMobile);
-        this.checkIsMobile();
+        //Global Events
+        this.resizeSubscription = fromEvent(window, 'resize')
+            .pipe(
+                debounceTime(100)
+            )
+            .subscribe(evt => {
+                this.isMobile = this.checkIsMobile();
+            })
 
-        // Events to auto-control expandable menus without further html code
-        document.querySelectorAll('.expandable-menu').forEach(element => {
-            element.querySelector('button').addEventListener('click', ev => {
-                ev.stopPropagation();
-                const dropdown = element.querySelector('.dropdown');
-                const input = dropdown.querySelector('input');
-                this.closeAllExpandableMenus(dropdown);
-                $(dropdown).slideToggle();
-
-                if (input !== null) {
-                    input.focus();
+        this.documentClickSubscription = fromEvent(document, 'click')
+            .subscribe(evt => {
+                //Close all open dropdown when clicking anywhere except inside a dropdown or its content
+                if(!(evt.target as HTMLElement).parentElement?.className.toString().includes('dropdown')) {
+                    this.closeAllDropdown();
                 }
-            });
-        });
+            })
 
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.dropdown').forEach(element => {
-                if (this.isMobile || !element.parentElement.classList.contains('only-mobile')) {
-                    this.closeAllExpandableMenus();
-                }
-            });
-        });
-
-        document.querySelectorAll('.dropdown').forEach(element => {
-            element.addEventListener('click', ev => {
-                ev.stopPropagation();
-            });
-        });
+        //First mobile-mode check call
+        this.isMobile = this.checkIsMobile();
     }
 
     ngAfterViewInit() {
-        //Apply events to elements
+        // Apply events to native elements
         fromEvent(this.searchBox.nativeElement, 'input')
             .pipe(
                 map((event: InputEvent) => (event.target as HTMLInputElement).value),
@@ -69,6 +68,20 @@ export class AppComponent implements OnInit, AfterViewInit {
             .subscribe((text: string) => {
                 this.search(text);
             });
+
+        this.closeAllDropdown();
+    }
+
+    ngOnDestroy() {
+        this.resizeSubscription.unsubscribe();
+        this.documentClickSubscription.unsubscribe();
+    }
+
+    /**
+     * Returns true if app is in mobile mode
+     */
+    checkIsMobile() {
+        return window.matchMedia('(max-width: 767px)').matches;
     }
 
     /**
@@ -79,8 +92,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.router.navigateByUrl('user-search/' + searchTerm);
     }
 
-
-    /* -- Theming Methods -- */
+    /**
+     * Switches theme by selected one
+     * @param event
+     */
     switchTheme(event) {
         event.stopPropagation();
         if (event.target.matches('button')) {
@@ -88,23 +103,48 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
     }
 
-    closeAllExpandableMenus(current = null) {
-        let $elems = $('.expandable-menu');
-        if (!this.isMobile) {
-            $elems = $elems.not('.only-mobile');
-        }
-        $elems = $elems.find('.dropdown');
-        if (current !== null) {
-            $elems = $elems.not(current);
-        }
-        $elems.slideUp();
-    }
-
-    checkIsMobile() {
-        this.isMobile = window.matchMedia('(max-width: 767px)').matches;
-    }
-
+    /**
+     * Prepares route for animations
+     * @param outlet outlet to anime
+     */
     prepareRoute(outlet: RouterOutlet) {
         return outlet && outlet.activatedRouteData && outlet.activatedRouteData.animation;
+    }
+
+    /**
+     * Toggles specified dropdown state
+     * @param key dropdown key in dropwdownStates
+     * @param event event that triggered the function
+     */
+    toggleDropdownState(key: string, event: Event) {
+        event.stopPropagation();
+        this.closeAllDropdown(key);
+        this.dropwdownStates[key] = !this.dropwdownStates[key];
+    }
+
+    /**
+     * Checks state for specified dropdown
+     * @param key dropdown key in dropwdownStates
+     * @param onlyMobile if dropdown is only mobile, state will be true if app is not in mobile state. This way
+     * the dropdown content is always "open" on no-mobile mode
+     */
+    checkDropdownState(key: string, onlyMobile: boolean) {
+        if (onlyMobile) {
+            return (!this.isMobile || (this.isMobile) && this.dropwdownStates[key]);
+        } else {
+            return this.dropwdownStates[key];
+        }
+    }
+
+    /**
+     * Closes all expandable menus except the specified one (if any)
+     * @param excludedDropdownKey Dropdown to exclude from global collapse
+     */
+    closeAllDropdown(excludedDropdownKey: string = null) {
+        for(let key in this.dropwdownStates) {
+            if (key != excludedDropdownKey) {
+                this.dropwdownStates[key] = false;
+            }
+        }
     }
 }
