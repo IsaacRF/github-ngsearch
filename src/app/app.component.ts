@@ -61,7 +61,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         fromEvent(this.searchBox.nativeElement, 'input')
             .pipe(
                 map((event: InputEvent) => (event.target as HTMLInputElement).value),
-                filter(Boolean),
+                //filter(Boolean),
                 debounceTime(300),
                 distinctUntilChanged()
             )
