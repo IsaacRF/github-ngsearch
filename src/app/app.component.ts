@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { routeSlideRightLeftAnimation, slideInOutAnimation } from 'src/styles/animations';
 import { fromEvent, Subscription } from 'rxjs';
@@ -13,7 +13,7 @@ import { filter, debounceTime, distinctUntilChanged, map } from 'rxjs/operators'
         slideInOutAnimation
     ]
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     title = 'GitHub NgSearch';
     theme = 'light-theme';
     isMobile = false;
@@ -30,29 +30,29 @@ export class AppComponent implements OnInit, AfterViewInit {
     dropwdownStates: any = {
         theme: false,
         search: false
-    }
+    };
 
     constructor(private router: Router) { }
 
     ngOnInit() {
-        //Global Events
+        // Global Events
         this.resizeSubscription = fromEvent(window, 'resize')
             .pipe(
                 debounceTime(100)
             )
             .subscribe(evt => {
                 this.isMobile = this.checkIsMobile();
-            })
+            });
 
         this.documentClickSubscription = fromEvent(document, 'click')
             .subscribe(evt => {
-                //Close all open dropdown when clicking anywhere except inside a dropdown or its content
+                // Close all open dropdown when clicking anywhere except inside a dropdown or its content
                 if (!(evt.target as HTMLElement).parentElement?.className.toString().includes('dropdown')) {
                     this.closeAllDropdown();
                 }
-            })
+            });
 
-        //First mobile-mode check call
+        // First mobile-mode check call
         this.isMobile = this.checkIsMobile();
     }
 
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         fromEvent(this.searchBox.nativeElement, 'input')
             .pipe(
                 map((event: InputEvent) => (event.target as HTMLInputElement).value),
-                //filter(Boolean),
+                // filter(Boolean),
                 debounceTime(300),
                 distinctUntilChanged()
             )
@@ -94,7 +94,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     /**
      * Switches theme by selected one
-     * @param event
+     * @param event Trigger event
      */
     switchTheme(event) {
         event.stopPropagation();
@@ -141,8 +141,8 @@ export class AppComponent implements OnInit, AfterViewInit {
      * @param excludedDropdownKey Dropdown to exclude from global collapse
      */
     closeAllDropdown(excludedDropdownKey: string = null) {
-        for (let key in this.dropwdownStates) {
-            if (key != excludedDropdownKey) {
+        for (const key in this.dropwdownStates) {
+            if (key !== excludedDropdownKey) {
                 this.dropwdownStates[key] = false;
             }
         }
