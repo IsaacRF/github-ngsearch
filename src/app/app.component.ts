@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.documentClickSubscription = fromEvent(document, 'click')
             .subscribe(evt => {
                 //Close all open dropdown when clicking anywhere except inside a dropdown or its content
-                if(!(evt.target as HTMLElement).parentElement?.className.toString().includes('dropdown')) {
+                if (!(evt.target as HTMLElement).parentElement?.className.toString().includes('dropdown')) {
                     this.closeAllDropdown();
                 }
             })
@@ -141,10 +141,20 @@ export class AppComponent implements OnInit, AfterViewInit {
      * @param excludedDropdownKey Dropdown to exclude from global collapse
      */
     closeAllDropdown(excludedDropdownKey: string = null) {
-        for(let key in this.dropwdownStates) {
+        for (let key in this.dropwdownStates) {
             if (key != excludedDropdownKey) {
                 this.dropwdownStates[key] = false;
             }
+        }
+    }
+
+    /**
+     * Focus search box
+     * @param event Animation event that triggered the focus
+     */
+    focusSearch(event: any) {
+        if (event.toState) {
+            this.searchBox.nativeElement.focus();
         }
     }
 }
