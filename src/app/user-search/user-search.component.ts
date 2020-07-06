@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class UserSearchComponent implements OnInit {
     users: User[];
     searchTerm: string;
-    isLoading: boolean = false;
+    isLoading = false;
 
     constructor(
         private githubApiService: GithubApiService,

@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { routeSlideRightLeftAnimation, slideInOutAnimation } from 'src/styles/animations';
 import { fromEvent, Subscription } from 'rxjs';
 import { filter, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { AnimationEvent } from '@angular/animations';
 
 @Component({
     selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
      * true: open
      * false: closed
      */
-    dropwdownStates: any = {
+    dropwdownStates = {
         theme: false,
         search: false
     };
@@ -152,7 +153,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
      * Focus search box
      * @param event Animation event that triggered the focus
      */
-    focusSearch(event: any) {
+    focusSearch(event: AnimationEvent) {
         if (event.toState) {
             this.searchBox.nativeElement.focus();
         }

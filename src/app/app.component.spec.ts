@@ -1,12 +1,17 @@
-import { TestBed, async } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
+    let app: AppComponent;
+    let fixture: ComponentFixture<AppComponent>;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [
-                RouterTestingModule
+                RouterTestingModule,
+                BrowserAnimationsModule
             ],
             declarations: [
                 AppComponent
@@ -14,15 +19,22 @@ describe('AppComponent', () => {
         }).compileComponents();
     }));
 
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AppComponent);
+        app = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
     it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
         expect(app).toBeTruthy();
     });
 
-    it(`should have as title 'GitHub NgSearch'`, () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.componentInstance;
+    it(`app title must be 'GitHub NgSearch'`, () => {
         expect(app.title).toEqual('GitHub NgSearch');
+    });
+
+    it('should render title and text should be the same as app title', () => {
+        const compiled = fixture.nativeElement;
+        expect(compiled.querySelector('.toolbar span').textContent).toContain(app.title);
     });
 });
