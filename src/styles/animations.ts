@@ -1,7 +1,7 @@
 import { trigger, animate, animateChild, transition, group, style, query, state } from '@angular/animations';
 
 export const routeSlideRightLeftAnimation =
-    trigger('routeAnimations', [
+    trigger('routeSlideRightLeftAnimation', [
         transition('UserSearchPage => UserDetailPage', [
             style({ position: 'relative' }),
             query(':enter, :leave', [
@@ -77,4 +77,37 @@ export const slideInOutAnimation =
         transition('true => false', [
             animate('400ms ease-in-out', style({ transform: 'scaleY(0)' }))
         ])
+    ]);
+
+export const fadeInOutDisplayAnimation =
+    trigger('fadeInOutDisplayAnimation', [
+        state('true',
+            style({
+                display: 'flex',
+                opacity: 1,
+            }),
+        ),
+        state('false',
+            style({
+                display: 'none',
+                opacity: 0,
+            }),
+        ),
+        transition('true => false', [animate('300ms ease-in-out'), style({ display: 'none' })]),
+        transition('false => true', [style({ display: 'flex' }), animate('300ms ease-in-out')])
+    ]);
+
+export const fadeInOutAnimation =
+    trigger('fadeInOutAnimation', [
+        state('true',
+            style({
+                opacity: 1,
+            }),
+        ),
+        state('false',
+            style({
+                opacity: 0,
+            }),
+        ),
+        transition('* <=> *', animate('300ms ease-in-out')),
     ]);
