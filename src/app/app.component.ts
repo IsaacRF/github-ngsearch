@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { routeSlideRightLeftAnimation, slideInOutAnimation } from 'src/styles/animations';
 import { fromEvent, Subscription } from 'rxjs';
@@ -18,20 +18,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     title = 'GitHub NgSearch';
     theme = 'light-theme';
     isMobile = false;
-    resizeSubscription: Subscription;
-    documentClickSubscription: Subscription;
+    resizeSubscription: Subscription = new Subscription();
+    documentClickSubscription: Subscription = new Subscription();
 
-    @ViewChild('searchBox') searchBox: ElementRef;
+    @ViewChild('searchBox') searchBox?: ElementRef;
 
     /**
      * States for the different dropdown + button combos
      * true: open
      * false: closed
      */
-    dropwdownStates = {
-        theme: false,
-        search: false
-    };
+    dropdownStates: Map<string, boolean> = new Map([
+        ['theme', false],
+        ['search', false]
+    ]);
 
     constructor(private router: Router) { }
 
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         // Apply events to native elements
-        fromEvent(this.searchBox.nativeElement, 'input')
+        fromEvent<InputEvent>(this.searchBox?.nativeElement, 'input')
             .pipe(
                 map((event: InputEvent) => (event.target as HTMLInputElement).value),
                 // filter(Boolean),
@@ -97,10 +97,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
      * Switches theme by selected one
      * @param event Trigger event
      */
-    switchTheme(event) {
+    switchTheme(event: Event) {
         event.stopPropagation();
-        if (event.target.matches('button')) {
-            this.theme = event.target.getAttribute('data-theme');
+        if ((event.target as HTMLElement).matches('button')) {
+            const dataTheme = (event.target as HTMLElement).getAttribute('data-theme');
+            if (dataTheme) {
+                this.theme = dataTheme;
+            }
         }
     }
 
@@ -120,7 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     toggleDropdownState(key: string, event: Event) {
         event.stopPropagation();
         this.closeAllDropdown(key);
-        this.dropwdownStates[key] = !this.dropwdownStates[key];
+        this.dropdownStates.set(key, !this.dropdownStates.get(key));
     }
 
     /**
@@ -131,9 +134,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     checkDropdownState(key: string, onlyMobile: boolean) {
         if (onlyMobile) {
-            return (!this.isMobile || (this.isMobile) && this.dropwdownStates[key]);
+            return (!this.isMobile || (this.isMobile) && this.dropdownStates.get(key));
         } else {
-            return this.dropwdownStates[key];
+            return this.dropdownStates.get(key);
         }
     }
 
@@ -141,10 +144,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
      * Closes all expandable menus except the specified one (if any)
      * @param excludedDropdownKey Dropdown to exclude from global collapse
      */
-    closeAllDropdown(excludedDropdownKey: string = null) {
-        for (const key in this.dropwdownStates) {
+    closeAllDropdown(excludedDropdownKey: string | null = null) {
+        for (const key of this.dropdownStates.keys()) {
+            console.log(key);
             if (key !== excludedDropdownKey) {
-                this.dropwdownStates[key] = false;
+                this.dropdownStates.set(key, false);
             }
         }
     }
@@ -155,7 +159,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     focusSearch(event: AnimationEvent) {
         if (event.toState) {
-            this.searchBox.nativeElement.focus();
+            this.searchBox?.nativeElement.focus();
         }
     }
 }

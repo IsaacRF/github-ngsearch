@@ -11,8 +11,8 @@ import { ActivatedRoute } from '@angular/router';
     animations: [ fadeInOutAnimation, fadeInOutDisplayAnimation ]
 })
 export class UserSearchComponent implements OnInit {
-    users: User[];
-    searchTerm: string;
+    users?: User[] | null;
+    searchTerm?: string;
     isLoading = false;
 
     constructor(

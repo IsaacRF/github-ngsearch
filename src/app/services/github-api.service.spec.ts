@@ -59,7 +59,7 @@ describe('GithubApiService', () => {
                     company: 'Test company',
                     location: 'Location',
                     email: 'isaacrf239@gmail.com',
-                    blog: 'https://isaacrf.com'}) as HttpResponseUserDetails
+                    blog: 'https://isaacrf.com'}) as HttpResponseUserDetails;
 
             service.getUserDetails(dummyUser.login).subscribe(user => {
                 expect(user.login).toEqual(dummyUser.login);

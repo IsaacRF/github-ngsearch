@@ -11,10 +11,10 @@ import { Repo } from '../model/Repo';
     styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent implements OnInit {
-    userLogin: string;
-    userDetails: UserDetails;
-    userFollowers: User[];
-    userRepos: Repo[];
+    userLogin?: string | null;
+    userDetails?: UserDetails | null;
+    userFollowers?: User[] | null;
+    userRepos?: Repo[] | null;
 
     constructor(
         private githubApiService: GithubApiService,
