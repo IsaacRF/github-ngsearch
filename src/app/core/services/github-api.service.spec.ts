@@ -1,10 +1,10 @@
-import { HttpResponseUserDetails } from './../model/HttpResponseUserDetails';
-import { UserDetails } from './../model/UserDetails';
+import { HttpResponseUserDetails } from './../models/HttpResponseUserDetails';
+import { UserDetails } from './../models/UserDetails';
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { GithubApiService } from './github-api.service';
-import { User } from '../model/User';
+import { User } from '../models/User';
 import { HttpParams, HttpResponse } from '@angular/common/http';
 
 describe('GithubApiService', () => {

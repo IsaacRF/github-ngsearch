@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { User } from './../model/User';
-import { UserDetails } from './../model/UserDetails';
-import { Repo } from './../model/Repo';
-import { HttpResponseUsers } from '../model/HttpResponseUsers';
-import { HttpResponseUserDetails } from '../model/HttpResponseUserDetails';
-import { HttpResponseRepos } from '../model/HttpResponseRepos';
-import { HttpResponseFollowers } from './../model/HttpResponseFollowers';
+import { User } from '@models/User';
+import { UserDetails } from '@models/UserDetails';
+import { Repo } from '@models/Repo';
+import { HttpResponseUsers } from '@models/HttpResponseUsers';
+import { HttpResponseUserDetails } from '@models/HttpResponseUserDetails';
+import { HttpResponseRepos } from '@models/HttpResponseRepos';
+import { HttpResponseFollowers } from '@models/HttpResponseFollowers';
 
 @Injectable({
     providedIn: 'root'

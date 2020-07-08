@@ -15,6 +15,12 @@
             "es2018",
             "dom"
         ],
+        "paths": {
+            "@features/*": ["src/app/features/*"],
+            "@models/*": ["src/app/core/models/*"],
+            "@services/*": ["src/app/core/services/*"],
+            "@styles/*": ["src/styles/*"],
+        },
         "strict": true,
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true

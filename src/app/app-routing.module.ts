@@ -1,5 +1,5 @@
-import { UserSearchComponent } from './user-search/user-search.component';
-import { UserDetailComponent } from './user-detail/user-detail.component';
+import { UserSearchComponent } from '@features/user-search/user-search.component';
+import { UserDetailComponent } from '@features/user-detail/user-detail.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 

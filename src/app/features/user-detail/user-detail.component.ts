@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GithubApiService } from './../services/github-api.service';
-import { UserDetails } from './../model/UserDetails';
-import { User } from '../model/User';
-import { Repo } from '../model/Repo';
+import { GithubApiService } from '@services/github-api.service';
+import { UserDetails } from '@models/UserDetails';
+import { User } from '@models/User';
+import { Repo } from '@models/Repo';
 
 @Component({
     selector: 'app-user-detail',
