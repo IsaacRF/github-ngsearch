@@ -1,4 +1,4 @@
-import { fadeInOutAnimation, fadeInOutDisplayAnimation } from './../../../styles/animations';
+import { fadeInOutAnimation, fadeInOutDisplayAnimation } from '@styles/animations';
 import { User } from '@models/User';
 import { GithubApiService } from '@services/github-api.service';
 import { Component, OnInit } from '@angular/core';
