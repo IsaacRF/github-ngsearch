@@ -79,12 +79,10 @@
             }
         }
 
-        .card-container {
-            .no-results {
-                svg {
-                    path {
-                        fill: map-get($colors, secondary);
-                    }
+        .no-results {
+            svg {
+                path {
+                    fill: map-get($colors, secondary);
                 }
             }
         }
