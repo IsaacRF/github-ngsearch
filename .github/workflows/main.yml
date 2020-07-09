@@ -9,10 +9,10 @@ on:
       - '**'            # matches every branch
   #    - '!development'  # excludes development
   #    - '!master'       # excludes master
-  pull_request:
-    branches:
+  #pull_request:
+  #  branches:
   #    - 'development'   # includes development
-      - 'master'        # includes master
+  #    - 'master'        # includes master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
