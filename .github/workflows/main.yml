@@ -1,14 +1,18 @@
-# This is a basic workflow to help you get started with Actions
-
+# Continuous Integration workflow
 name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - '**'            # matches every branch
+      - '!development'  # excludes development
+      - '!master'       # excludes master
+  #pull_request:
+  #  branches:
+  #    - 'development'   # includes development
+  #    - 'master'        # includes master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
