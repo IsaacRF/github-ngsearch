@@ -65,6 +65,12 @@ App architecture is structured so the app is fully and easily scalable in the fu
 
 ![folder-structure](https://user-images.githubusercontent.com/2803925/86979873-a799b880-c182-11ea-99f9-c3d22c5708db.png)
 
+### Continuous Integration
+
+App is built and tested on every branch push, and development and master branches are protected expecting this build and test process to pass before any pull request can be accepted and merged. Development and Master also launch the build and test process to ensure everything is ok after every merge. This encloses a secured continuous integration workflow.
+
+![github-ngsearch-ci-demo2](https://user-images.githubusercontent.com/2803925/87086096-5268b000-c231-11ea-88cd-f74b8c2e5ab5.gif)
+
 ## Project Build
 
 ### Development server
