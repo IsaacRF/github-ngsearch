@@ -7,8 +7,8 @@ on:
   push:
     branches:
       - '**'            # matches every branch
-      - '!development'  # excludes development
-      - '!master'       # excludes master
+  #    - '!development'  # excludes development
+  #    - '!master'       # excludes master
   #pull_request:
   #  branches:
   #    - 'development'   # includes development
