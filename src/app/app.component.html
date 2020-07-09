@@ -11,12 +11,12 @@
         <div class="spacer"></div>
 
         <div class="expandable-menu theme-selector">
-            <button type="button">
+            <button type="button" (click)="toggleDropdownState('theme', $event)">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;" viewBox="0 0 333 333" x="0px" y="0px" fill-rule="evenodd" clip-rule="evenodd">
                     <path d="M218 78c39,33 45,90 -40,121 -21,7 -27,35 -21,63 4,25 -58,48 -105,-6 -13,-15 -22,-32 -26,-50 -26,-119 109,-197 192,-128zm53 53l13 3c5,1 8,6 7,10l-42 138c-2,4 -6,7 -11,6l0 0c-5,-1 -7,-6 -6,-11l28 -140c1,-5 6,-8 11,-6zm26 -86c15,10 16,40 11,52 -12,28 -43,17 -38,-7 2,-15 22,-25 22,-40 0,-6 2,-7 5,-5zm-27 69l23 6c2,0 3,2 2,4l-1 5c0,2 -2,3 -4,3l-23 -6c-2,-1 -3,-3 -2,-5l1 -4c0,-2 2,-3 4,-3zm-91 8c7,-2 15,3 17,10 1,8 -4,16 -11,17 -8,2 -15,-3 -17,-11 -2,-7 3,-15 11,-16zm-29 -52c8,-2 15,3 16,10 2,8 -3,15 -10,16 -7,2 -15,-3 -16,-10 -2,-7 3,-15 10,-16zm-46 13c8,-1 15,3 16,11 2,7 -3,14 -10,16 -7,1 -15,-3 -16,-11 -2,-7 3,-14 10,-16zm-34 32c7,-2 15,3 16,10 2,7 -3,15 -10,16 -8,2 -15,-3 -16,-10 -2,-8 3,-15 10,-16zm-10 47c7,-2 14,3 16,10 2,7 -3,15 -10,16 -8,2 -15,-3 -17,-10 -1,-7 3,-15 11,-16z" />
                 </svg>
             </button>
-            <div class="dropdown" (click)="switchTheme($event)">
+            <div [@slideInOutAnimation]="checkDropdownState('theme', false)" class="dropdown" (click)="switchTheme($event)">
                 <ul>
                     <li><button type="button" data-theme="light-theme" title="Light Theme" [class.active]="theme=='light-theme'">Light Theme</button></li>
                     <li><button type="button" data-theme="dark-theme" title="Dark Theme" [class.active]="theme=='dark-theme'">Dark Theme</button></li>
@@ -26,19 +26,19 @@
         </div>
 
         <div class="expandable-menu only-mobile search-box">
-            <button type="button">
-                <svg height='100px' width='100px'  fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;" viewBox="0 0 847 847" x="0px" y="0px" fill-rule="evenodd" clip-rule="evenodd">
+            <button type="button" (click)="toggleDropdownState('search', $event)">
+                <svg height='100px' width='100px' fill="#000000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" version="1.1" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;" viewBox="0 0 847 847" x="0px" y="0px" fill-rule="evenodd" clip-rule="evenodd">
                     <path class="fil0" d="M112 112c119,-118 311,-118 429,0 112,112 118,288 20,407l61 61 -43 42 -60 -60c-119,97 -295,91 -407,-21 -118,-118 -118,-310 0,-429zm158 342c27,7 16,48 -11,41 -98,-26 -155,-156 -101,-250 14,-24 52,-3 38,22 -41,70 -5,166 74,187zm40 13c8,-8 21,-8 30,0 8,9 8,22 0,30 -9,9 -22,9 -30,0 -9,-8 -9,-21 0,-30zm493 244c61,61 -31,153 -92,92l-143 -143 92 -92 143 143zm-633 -541c-86,87 -86,227 0,314 87,86 227,86 314,0 86,-87 86,-227 0,-314 -87,-86 -227,-86 -314,0z"></path>
                 </svg>
             </button>
-            <div class="dropdown">
-                <input type="text" id="search-bar" placeholder="Search for usernames..." [(ngModel)]='searchTerm' (input)="search()">
+            <div [@slideInOutAnimation]="checkDropdownState('search', true)" (@slideInOutAnimation.done)="focusSearch($event)" class="dropdown">
+                <input type="text" id="search-bar" placeholder="Search for usernames..." #searchBox>
             </div>
         </div>
 
     </div>
 
-    <div class="content" role="main" [@routeAnimations]="prepareRoute(outlet)">
+    <div class="content" role="main" [@routeSlideRightLeftAnimation]="prepareRoute(outlet)">
         <router-outlet #outlet="outlet"></router-outlet>
     </div>
 

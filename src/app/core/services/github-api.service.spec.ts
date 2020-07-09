@@ -1,10 +1,11 @@
-import { UserDetails } from './../model/UserDetails';
+import { HttpResponseUserDetails } from './../models/HttpResponseUserDetails';
+import { UserDetails } from './../models/UserDetails';
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { GithubApiService } from './github-api.service';
-import { User } from '../model/User';
-import { HttpParams } from '@angular/common/http';
+import { User } from '../models/User';
+import { HttpParams, HttpResponse } from '@angular/common/http';
 
 describe('GithubApiService', () => {
     let injector: TestBed;
@@ -49,19 +50,26 @@ describe('GithubApiService', () => {
 
     describe('#getUserDetails', () => {
         it('should return an Observable<UserDetails>', () => {
-            const dummyUser: UserDetails =
-                new UserDetails(
-                    'IsaacRF',
-                    'Isaac R.F.',
-                    'https://avatars1.githubusercontent.com/u/2803925?v=4',
-                    'Test bio',
-                    'Test company',
-                    'Location',
-                    'isaacrf239@gmail.com',
-                    'https://isaacrf.com');
+            const dummyUser: HttpResponseUserDetails =
+                ({
+                    login: 'IsaacRF',
+                    name: 'Isaac R.F.',
+                    avatar_url: 'https://avatars1.githubusercontent.com/u/2803925?v=4',
+                    bio: 'Test bio',
+                    company: 'Test company',
+                    location: 'Location',
+                    email: 'isaacrf239@gmail.com',
+                    blog: 'https://isaacrf.com'}) as HttpResponseUserDetails;
 
             service.getUserDetails(dummyUser.login).subscribe(user => {
-                expect(user).toEqual(dummyUser);
+                expect(user.login).toEqual(dummyUser.login);
+                expect(user.name).toEqual(dummyUser.name);
+                expect(user.avatarUrl).toEqual(dummyUser.avatar_url);
+                expect(user.bio).toEqual(dummyUser.bio);
+                expect(user.company).toEqual(dummyUser.company);
+                expect(user.location).toEqual(dummyUser.location);
+                expect(user.email).toEqual(dummyUser.email);
+                expect(user.blog).toEqual(dummyUser.blog);
             });
 
             const req = httpMock.expectOne(`${service.apiUserDetailsEndpoint}/${dummyUser.login}`);

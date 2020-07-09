@@ -1,4 +1,4 @@
-@import '../../styles/resources';
+@import 'resources';
 
 :host {
     padding-top: 20px;
@@ -150,5 +150,20 @@
                 }
             }
         }
+    }
+}
+
+.spinner-loader {
+    display: none;
+    @keyframes spinner { to { transform: rotate(360deg); } }
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 12px solid rgba(#EEE, 0.4);
+    border-top-color: #0099ff;
+    animation: spinner .6s linear infinite;
+
+    &.active {
+        display: block;
     }
 }

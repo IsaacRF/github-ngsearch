@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { GithubApiService } from './../services/github-api.service';
-import { UserDetails } from './../model/UserDetails';
-import { User } from '../model/User';
-import { Repo } from '../model/Repo';
+import { GithubApiService } from '@services/github-api.service';
+import { UserDetails } from '@models/UserDetails';
+import { User } from '@models/User';
+import { Repo } from '@models/Repo';
 
 @Component({
     selector: 'app-user-detail',
@@ -11,10 +11,10 @@ import { Repo } from '../model/Repo';
     styleUrls: ['./user-detail.component.scss']
 })
 export class UserDetailComponent implements OnInit {
-    userLogin: string;
-    userDetails: UserDetails;
-    userFollowers: User[];
-    userRepos: Repo[];
+    userLogin?: string | null;
+    userDetails?: UserDetails | null;
+    userFollowers?: User[] | null;
+    userRepos?: Repo[] | null;
 
     constructor(
         private githubApiService: GithubApiService,

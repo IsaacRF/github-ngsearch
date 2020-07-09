@@ -1,7 +1,7 @@
-import { trigger, animate, animateChild, transition, group, style, query } from '@angular/animations';
+import { trigger, animate, animateChild, transition, group, style, query, state } from '@angular/animations';
 
-export const slideInAnimation =
-    trigger('routeAnimations', [
+export const routeSlideRightLeftAnimation =
+    trigger('routeSlideRightLeftAnimation', [
         transition('UserSearchPage => UserDetailPage', [
             style({ position: 'relative' }),
             query(':enter, :leave', [
@@ -50,4 +50,64 @@ export const slideInAnimation =
             ]),
             query(':enter', animateChild()),
         ])
+    ]);
+
+export const slideInOutAnimation =
+    trigger('slideInOutAnimation', [
+        state('true',
+            style({
+                display: 'block',
+                'transform-origin': 'top'
+            }),
+        ),
+        state('false',
+            style({
+                display: 'none',
+                'transform-origin': 'top'
+            })
+        ),
+        transition('false => true', [
+            style({
+                display: 'block',
+                transform: 'scaleY(0)',
+                'transform-origin': 'top'
+            }),
+            animate('400ms ease-in-out', style({ transform: 'scaleY(1)' }))
+        ]),
+        transition('true => false', [
+            animate('400ms ease-in-out', style({ transform: 'scaleY(0)' }))
+        ])
+    ]);
+
+export const fadeInOutDisplayAnimation =
+    trigger('fadeInOutDisplayAnimation', [
+        state('true',
+            style({
+                display: 'flex',
+                opacity: 1,
+            }),
+        ),
+        state('false',
+            style({
+                display: 'none',
+                opacity: 0,
+            }),
+        ),
+        transition('true => false', [animate('300ms ease-in-out'), style({ display: 'none' })]),
+        transition('false => true', [style({ display: 'flex' }), animate('300ms ease-in-out')])
+    ]);
+
+export const fadeInOutAnimation =
+    trigger('fadeInOutAnimation', [
+        state('true',
+            style({
+                opacity: 1,
+            }),
+        ),
+        state('false',
+            style({
+                opacity: 0,
+            }),
+        ),
+        transition('* <=> *', animate('300ms ease-in-out')),
     ]);

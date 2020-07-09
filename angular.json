@@ -7,7 +7,8 @@
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
-                    "style": "scss"
+                    "style": "scss",
+                    "strict": true
                 }
             },
             "root": "",
@@ -30,9 +31,12 @@
                         "styles": [
                             "src/styles.scss"
                         ],
-                        "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js"
-                        ]
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "./src/styles"
+                            ]
+                        },
+                        "scripts": []
                     },
                     "configurations": {
                         "production": {
@@ -53,13 +57,13 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "2mb",
-                                    "maximumError": "5mb"
+                                    "maximumWarning": "500kb",
+                                    "maximumError": "1mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb",
-                                    "maximumError": "10kb"
+                                    "maximumWarning": "2kb",
+                                    "maximumError": "5kb"
                                 }
                             ]
                         }
@@ -96,6 +100,11 @@
                         "styles": [
                             "src/styles.scss"
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "./src/styles"
+                            ]
+                        },
                         "scripts": []
                     },
                     "configurations": {

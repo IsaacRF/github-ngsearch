@@ -15,12 +15,10 @@
         }
     }
 
-    .card-container {
-        .no-results {
-            svg {
-                path {
-                    fill: darken(map-get($colors, secondary), 10%);
-                }
+    .no-results {
+        svg {
+            path {
+                fill: darken(map-get($colors, secondary), 10%);
             }
         }
     }

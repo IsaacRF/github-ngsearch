@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { User } from './../model/User';
-import { UserDetails } from './../model/UserDetails';
-import { Repo } from './../model/Repo';
+import { User } from '@models/User';
+import { UserDetails } from '@models/UserDetails';
+import { Repo } from '@models/Repo';
+import { HttpResponseUsers } from '@models/HttpResponseUsers';
+import { HttpResponseUserDetails } from '@models/HttpResponseUserDetails';
+import { HttpResponseRepos } from '@models/HttpResponseRepos';
+import { HttpResponseFollowers } from '@models/HttpResponseFollowers';
 
 @Injectable({
     providedIn: 'root'
@@ -45,10 +49,10 @@ export class GithubApiService {
             params: new HttpParams().set('q', userName)
         };
 
-        return this.http.get(this.apiUserEndpoint, httpOptions)
+        return this.http.get<HttpResponseUsers>(this.apiUserEndpoint, httpOptions)
             .pipe(
-                tap((response: any) => console.log(`retrieved ${response.total_count} users by search term ${userName}`)),
-                map((response: any) => {
+                tap((response: HttpResponseUsers) => console.log(`retrieved ${response.total_count} users by search term ${userName}`)),
+                map((response: HttpResponseUsers) => {
                     return response.items.map(user => {
                         return new User(user.login, user.avatar_url);
                     });
@@ -63,7 +67,7 @@ export class GithubApiService {
      * GET Http Call
      * @param userLogin User login name
      */
-    getUserDetails(userLogin: string): Observable<UserDetails> {
+    getUserDetails(userLogin?: string | null): Observable<UserDetails> {
         const httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
         const cachedDetails = this.cache.get(userLogin);
@@ -73,27 +77,42 @@ export class GithubApiService {
             httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
         }
 
-        return this.http.get<UserDetails>(`${this.apiUserDetailsEndpoint}/${userLogin}`, httpOptions)
+        return this.http.get<HttpResponseUserDetails>(`${this.apiUserDetailsEndpoint}/${userLogin}`, httpOptions)
             .pipe(
-                tap((response: any) => {
+                tap((response: HttpResponse<HttpResponseUserDetails>) => {
+                    if (!response || !response.body) {
+                        throw new Error('Response body is empty');
+                    }
+
                     console.log(`[HTTP] retrieved details of ${userLogin} / id: ${response.body.id}`);
 
                     // Save cache
-                    this.cache.put(userLogin, response, this.cacheEntryLifetimeMs, (key, value) => {
-                        console.log(`[--CACHE] User details cache ${key} has expired`);
-                    });
+                    this.cache.put(userLogin, response, this.cacheEntryLifetimeMs,
+                        (key: string, value: HttpResponse<HttpResponseUserDetails>) => {
+                            console.log(`[--CACHE] User details cache ${key} has expired`);
+                        });
                     console.log(`[++CACHE] Cached user details for ${userLogin}`);
                 }),
-                map((response: any) => new UserDetails(response.body.login, response.body.name,
-                    response.body.avatar_url || response.body.avatarUrl, response.body.bio, response.body.company,
-                    response.body.location, response.body.email, response.body.blog)),
-                catchError(err => {
+                map((response: HttpResponse<HttpResponseUserDetails>) => {
+                    if (!response || !response.body) {
+                        throw new Error('Response body is empty');
+                    }
+
+                    return new UserDetails(response.body.login, response.body.name,
+                        response.body.avatar_url, response.body.bio, response.body.company,
+                        response.body.location, response.body.email, response.body.blog);
+                }),
+                catchError((err: HttpErrorResponse) => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
                         console.log(`[CACHE] retrieved details of ${userLogin}`);
-                        return of(cachedDetails.body);
+
+                        return of(new UserDetails(cachedDetails.body.login, cachedDetails.body.name,
+                            cachedDetails.body.avatar_url || cachedDetails.body.avatarUrl, cachedDetails.body.bio,
+                            cachedDetails.body.company, cachedDetails.body.location, cachedDetails.body.email,
+                            cachedDetails.body.blog));
                     } else {
-                        this.handleError('getUserDetails', []);
+                        return this.handleError('getUserDetails', []);
                     }
                 })
             );
@@ -105,7 +124,7 @@ export class GithubApiService {
      * GET Http Call
      * @param userLogin User login name
      */
-    getUserRepos(userLogin: string): Observable<Repo[]> {
+    getUserRepos(userLogin?: string | null): Observable<Repo[]> {
         const httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
         const cachedRepos = this.cache.get(`${userLogin}${this.cacheReposKey}`);
@@ -115,29 +134,41 @@ export class GithubApiService {
             httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
         }
 
-        return this.http.get<Repo[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/repos`, httpOptions)
+        return this.http.get<HttpResponseRepos[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/repos`, httpOptions)
             .pipe(
-                tap((response: any) => {
+                tap((response: HttpResponse<HttpResponseRepos[]>) => {
+                    if (!response || !response.body) {
+                        throw new Error('Response body is empty');
+                    }
+
                     console.log(`[HTTP] retrieved ${response.body.length} repos from ${userLogin}`);
 
                     // Save cache
-                    this.cache.put(`${userLogin}${this.cacheReposKey}`, response, this.cacheEntryLifetimeMs, (key, value) => {
-                        console.log(`[--CACHE] User repos cache ${key} has expired`);
-                    });
+                    this.cache.put(`${userLogin}${this.cacheReposKey}`, response, this.cacheEntryLifetimeMs,
+                        (key: string, value: HttpResponse<HttpResponseRepos[]>) => {
+                            console.log(`[--CACHE] User repos cache ${key} has expired`);
+                        });
                     console.log(`[++CACHE] Cached user repos for ${userLogin}`);
                 }),
-                map((response: any) => {
+                map((response: HttpResponse<HttpResponseRepos[]>) => {
+                    if (!response || !response.body) {
+                        throw new Error('Response body is empty');
+                    }
+
                     return response.body.map(repo => {
                         return new Repo(repo.name, repo.description, repo.html_url);
                     });
                 }),
-                catchError(err => {
+                catchError((err: HttpErrorResponse) => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
                         console.log(`[CACHE] retrieved ${cachedRepos.body.length} repos from ${userLogin}`);
-                        return of(cachedRepos.body);
+
+                        return of(cachedRepos.body.map((repo: HttpResponseRepos) => {
+                            return new Repo(repo.name, repo.description, repo.html_url);
+                        }));
                     } else {
-                        this.handleError('getUserRepos', []);
+                        return this.handleError('getUserRepos', []);
                     }
                 })
             );
@@ -149,7 +180,7 @@ export class GithubApiService {
      * GET Http Call
      * @param userLogin User login name
      */
-    getUserFollowers(userLogin: string): Observable<User[]> {
+    getUserFollowers(userLogin?: string | null): Observable<User[]> {
         const httpOptions = { headers: this.httpHeaders, observe: 'response' as const };
 
         const cachedFollowers = this.cache.get(`${userLogin}${this.cacheFollowersKey}`);
@@ -159,29 +190,41 @@ export class GithubApiService {
             httpOptions.headers = httpOptions.headers.append('If-None-Match', etag);
         }
 
-        return this.http.get<User[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/followers`, httpOptions)
+        return this.http.get<HttpResponseFollowers[]>(`${this.apiUserDetailsEndpoint}/${userLogin}/followers`, httpOptions)
             .pipe(
-                tap((response: any) => {
+                tap((response: HttpResponse<HttpResponseFollowers[]>) => {
+                    if (!response || !response.body) {
+                        throw new Error('Response body is empty');
+                    }
+
                     console.log(`[HTTP] retrieved ${response.body.length} followers from ${userLogin}`);
 
                     // Save cache
-                    this.cache.put(`${userLogin}${this.cacheFollowersKey}`, response, this.cacheEntryLifetimeMs, (key, value) => {
-                        console.log(`[--CACHE] User followers cache ${key} has expired`);
-                    });
+                    this.cache.put(`${userLogin}${this.cacheFollowersKey}`, response, this.cacheEntryLifetimeMs,
+                        (key: string, value: HttpResponse<HttpResponseFollowers[]>) => {
+                            console.log(`[--CACHE] User followers cache ${key} has expired`);
+                        });
                     console.log(`[++CACHE] Cached user followers for ${userLogin}`);
                 }),
-                map((response: any) => {
+                map((response: HttpResponse<HttpResponseFollowers[]>) => {
+                    if (!response || !response.body) {
+                        throw new Error('Response body is empty');
+                    }
+
                     return response.body.map(user => {
                         return new User(user.login, user.avatar_url);
                     });
                 }),
-                catchError(err => {
+                catchError((err: HttpErrorResponse) => {
                     // Error 304: Not Modified -> Get info from Cache
                     if (err.status === 304) {
                         console.log(`[CACHE] retrieved ${cachedFollowers.body.length} followers from ${userLogin}`);
-                        return of(cachedFollowers.body);
+
+                        return of(cachedFollowers.body.map((user: HttpResponseFollowers) => {
+                            return new User(user.login, user.avatar_url);
+                        }));
                     } else {
-                        this.handleError('getUserFollowers', []);
+                        return this.handleError('getUserFollowers', []);
                     }
                 })
             );
@@ -193,7 +236,7 @@ export class GithubApiService {
      * @param result optional value to return as the observable result
      */
     private handleError<T>(operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
+        return (error: HttpErrorResponse): Observable<T> => {
             console.error(error);
 
             // Let the app keep running by returning an empty result.

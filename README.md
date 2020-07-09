@@ -53,6 +53,18 @@ An optional timeout and offline cache could be also implemented to avoid sucessi
 
 ![ngsearch-cache](https://user-images.githubusercontent.com/2803925/85222358-8aab6a00-b3ba-11ea-9c29-90ffd3584e61.gif)
 
+### Lazy loading
+
+User detail page is configured to lazy load only when it's required, helping keep initial bundle sizes smaller, which in turn helps decrease load times. As user search module is the main route point of the app and it's required on first load most of the time, I opted to go with an eagerly load approach, also serving as demonstration purposes showing the differences between the two modes.
+
+![github-ngsearch-lazyloading-demo-optimized](https://user-images.githubusercontent.com/2803925/86979863-a36d9b00-c182-11ea-926c-0e9d8650ca61.gif)
+
+### Scalable folder structure
+
+App architecture is structured so the app is fully and easily scalable in the future, using the core module, shared modules, and module by feature division philosophy.
+
+![folder-structure](https://user-images.githubusercontent.com/2803925/86979873-a799b880-c182-11ea-99f9-c3d22c5708db.png)
+
 ## Project Build
 
 ### Development server
