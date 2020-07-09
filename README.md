@@ -1,9 +1,9 @@
 # Github Ngsearch
 ![CI](https://github.com/IsaacRF/github-ngsearch/workflows/CI/badge.svg)
 
-**Author**: IsaacRF239
+**Author**: [IsaacRF239](https://isaacrf.com/about)
 
-**Deployed app URL**: http://isaacrf.com/apps/github-ngsearch
+**Deployed app URL**: https://isaacrf.com/apps/github-ngsearch
 
 **License**: [GNU GPLv3](https://github.com/IsaacRF/github-ngsearch#license)
 
