@@ -23,9 +23,9 @@ Theme button can be used to dinamically swap themes
 
 ![Theming](https://user-images.githubusercontent.com/2803925/83993507-e5bd7580-a953-11ea-80b2-799a2a032f42.gif)
 
-### User Detail
+### User Details
 
-Click an user to go to the user detail
+Click an user to go to the user details
 
 ![Details](https://user-images.githubusercontent.com/2803925/83993503-e3f3b200-a953-11ea-9e6b-630633d8624c.gif)
 
