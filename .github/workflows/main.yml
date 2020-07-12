@@ -9,6 +9,9 @@ on:
       - '**'            # matches every branch
   #    - '!development'  # excludes development
   #    - '!master'       # excludes master
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
   #pull_request:
   #  branches:
   #    - 'development'   # includes development
